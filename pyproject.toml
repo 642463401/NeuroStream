@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neurostream"
+version = "0.1.0"
+description = "Memory-centric AI training framework — learn while you infer"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "faiss-cpu>=1.7",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+sbert = ["sentence-transformers>=2.2"]
+clip = ["open-clip-torch>=2.20", "Pillow>=9.0"]
+whisper = ["openai-whisper>=20230918"]
+decoder = ["tiktoken>=0.5"]
+agent = ["dashscope>=1.0", "matplotlib>=3.5"]
+gpu = ["pynvml>=11.5"]
+pretrained = [
+    "sentence-transformers>=2.2",
+    "open-clip-torch>=2.20",
+    "Pillow>=9.0",
+    "openai-whisper>=20230918",
+]
+full = [
+    "sentence-transformers>=2.2",
+    "open-clip-torch>=2.20",
+    "Pillow>=9.0",
+    "openai-whisper>=20230918",
+    "tiktoken>=0.5",
+    "dashscope>=1.0",
+    "matplotlib>=3.5",
+    "pynvml>=11.5",
+]

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroStream 数学公式汇总</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    tags: 'ams'
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --accent: #58a6ff;
+  --accent-dim: #1f6feb33;
+  --green: #3fb950;
+  --orange: #d29922;
+  --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 0;
+}
+
+/* ---- header ---- */
+header {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0 40px;
+  text-align: center;
+}
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+header p {
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+/* ---- layout ---- */
+.container { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ---- toc ---- */
+nav.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 28px;
+  margin-bottom: 40px;
+}
+nav.toc h2 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+nav.toc ol {
+  list-style: none;
+  counter-reset: toc;
+  columns: 2;
+  column-gap: 32px;
+}
+nav.toc li { counter-increment: toc; margin: 4px 0; break-inside: avoid; }
+nav.toc li::before {
+  content: counter(toc) ".";
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
+nav.toc a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color .15s;
+}
+nav.toc a:hover { color: var(--accent); }
+
+/* ---- section ---- */
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+section h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
+}
+
+/* ---- formula card ---- */
+.formula {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px dashed var(--border);
+}
+.formula:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.formula h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.formula h3 .num {
+  color: var(--purple);
+  margin-right: 6px;
+}
+.math-block {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin: 12px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+.formula ul, .formula ol {
+  margin: 10px 0 10px 20px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+.formula li { margin: 3px 0; }
+.formula li strong, .formula li code { color: var(--text); }
+.note {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 8px;
+}
+.note code {
+  background: var(--bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  color: var(--green);
+}
+.desc {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin: 8px 0;
+}
+
+/* ---- params table ---- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: 12px;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+td:first-child { color: var(--purple); font-weight: 500; text-align: center; }
+td code {
+  background: var(--bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--green);
+  font-size: 0.85rem;
+}
+tr:hover td { background: var(--accent-dim); }
+
+/* ---- responsive ---- */
+@media (max-width: 640px) {
+  nav.toc ol { columns: 1; }
+  section { padding: 20px 16px; }
+  .math-block { padding: 12px 10px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NeuroStream 数学公式汇总</h1>
+  <p>框架核心数学公式完整参考 &mdash; 自动渲染 LaTeX</p>
+</header>
+
+<div class="container">
+
+<!-- TOC -->
+<nav class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#sec1">记忆系统</a></li>
+    <li><a href="#sec2">分层存储</a></li>
+    <li><a href="#sec3">影子权重系统</a></li>
+    <li><a href="#sec4">抗灾难性遗忘</a></li>
+    <li><a href="#sec5">Transformer 解码器</a></li>
+    <li><a href="#sec6">文本生成采样</a></li>
+    <li><a href="#sec7">编码器</a></li>
+    <li><a href="#sec8">正则化</a></li>
+    <li><a href="#sec9">参数默认值速查</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<!-- 1. 记忆系统 -->
+<!-- ============================================================ -->
+<section id="sec1">
+<h2>1. 记忆系统</h2>
+
+<div class="formula">
+  <h3><span class="num">1.1</span> 唤醒评分 (Wake-up Score)</h3>
+  <div class="math-block">
+    $$ S_{\text{wake}}(q,\, m) \;=\; \cos(q,\, m) \;+\; \ln(1 + n_{\text{access}}) \;+\; \alpha_{\text{reward}} \cdot r $$
+  </div>
+  <ul>
+    <li>$q$ &mdash; 查询向量</li>
+    <li>$m$ &mdash; 记忆向量</li>
+    <li>$n_{\text{access}}$ &mdash; 记忆被访问次数</li>
+    <li>$\alpha_{\text{reward}}$ &mdash; reward 权重 (默认 0.5)</li>
+    <li>$r$ &mdash; 记忆的 reward 评分 $\in [-1,\,1]$</li>
+  </ul>
+  <p class="note">来源: <code>memory/pool.py:83-86</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">1.2</span> 余弦相似度 (Cosine Similarity)</h3>
+  <div class="math-block">
+    $$ \cos(u,\, v) \;=\; \frac{u \cdot v}{\|u\| \cdot \|v\|} $$
+  </div>
+  <p class="desc">向量预先经过 L2 归一化 (<code>faiss.normalize_L2</code>)，因此内积即为余弦相似度。</p>
+  <p class="note">来源: <code>memory/pool.py</code>, <code>memory/tiered.py</code>, <code>consolidation/time_integral.py</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">1.3</span> 指数衰减 (Exponential Decay)</h3>
+  <div class="math-block">
+    $$ I(t) \;=\; I_0 \cdot e^{-\lambda \,\Delta t} $$
+  </div>
+  <ul>
+    <li>$I_0$ &mdash; 初始记忆强度</li>
+    <li>$\lambda$ &mdash; 衰减率 (默认 0.01)</li>
+    <li>$\Delta t = t_{\text{now}} - t_{\text{created}}$</li>
+  </ul>
+  <p class="note">来源: <code>memory/pool.py:95-101</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">1.4</span> 时间积分固化 (Time-Integral Consolidation)</h3>
+  <p class="desc">当新记忆与已有记忆相似度 $\geq \theta_{\text{merge}}$ (默认 0.8) 时，合并而非新增:</p>
+  <div class="math-block">
+    $$ I_{\text{merged}} \;=\; I_{\text{old}} \cdot e^{-\lambda \cdot \max(\Delta t,\, 0)} \;+\; I_{\text{new}} $$
+  </div>
+  <p class="note">来源: <code>consolidation/time_integral.py:73-80</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">1.5</span> 反馈累积 (Feedback Accumulation)</h3>
+  <div class="math-block">
+    $$ r_{\text{new}} \;=\; 0.7 \cdot r_{\text{old}} \;+\; 0.3 \cdot s_{\text{feedback}} $$
+  </div>
+  <p class="desc">指数移动平均方式整合新反馈信号到记忆的 reward 评分中。</p>
+  <p class="note">来源: <code>runtime/learning.py:31-34</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. 分层存储 -->
+<!-- ============================================================ -->
+<section id="sec2">
+<h2>2. 分层存储</h2>
+
+<div class="formula">
+  <h3><span class="num">2.1</span> Warm 层向量检索</h3>
+  <div class="math-block">
+    $$ \text{scores} = V \cdot q^T, \qquad \text{top-}k = \operatorname{argpartition}(\text{scores},\, -k) $$
+  </div>
+  <p class="desc">Hot 层使用 FAISS (sub-ms), Warm 层使用 NumPy 矩阵乘法 (~ms)。</p>
+  <p class="note">来源: <code>memory/tiered.py:68-78</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">2.2</span> 晋升条件 (Promotion)</h3>
+  <div class="math-block">
+    $$ \text{Warm} \rightarrow \text{Hot}: \quad I \geq \theta_{\text{promotion}} $$
+  </div>
+  <ul>
+    <li>$\theta_{\text{promotion}}$ &mdash; 晋升阈值 (默认 0.7)</li>
+  </ul>
+  <p class="note">来源: <code>memory/tiered.py:212-213</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">2.3</span> 冷库归档条件 (Archival)</h3>
+  <div class="math-block">
+    $$ \text{Warm} \rightarrow \text{Cold}: \quad \text{age} > T_{\text{demotion}} \;\land\; n_{\text{access}} = 0 $$
+  </div>
+  <ul>
+    <li>$T_{\text{demotion}}$ &mdash; 降级时间窗口 (默认 300s)</li>
+  </ul>
+  <p class="note">来源: <code>memory/tiered.py:297-300</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. 影子权重系统 -->
+<!-- ============================================================ -->
+<section id="sec3">
+<h2>3. 影子权重系统</h2>
+
+<div class="formula">
+  <h3><span class="num">3.1</span> 残差投射 (Residual Projection)</h3>
+  <div class="math-block">
+    $$ f(x) \;=\; x + \text{MLP}(x) $$
+  </div>
+  <div class="math-block">
+    $$ \text{MLP}(x) \;=\; W_2 \cdot \text{GELU}(W_1 x + b_1) + b_2 $$
+  </div>
+  <p class="desc">其中 $W_2,\, b_2$ 初始化为<strong>零</strong>，使得初始行为为恒等映射: $f(x) = x + 0 = x$。</p>
+  <p class="note">来源: <code>shadow/projector.py:28-44</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">3.2</span> 对比学习损失 &mdash; InfoNCE (Contrastive Loss)</h3>
+  <div class="math-block">
+    $$ \text{logits}_{ij} = \frac{z_i \cdot z_j}{\tau} $$
+  </div>
+  <div class="math-block">
+    $$ \text{labels}_{ij} = \text{softmax}\!\left(\frac{\text{sim}_{ij}}{\tau}\right) $$
+  </div>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{contrast}} = -\frac{1}{N} \sum_{i} \sum_{j \neq i} \text{labels}_{ij} \cdot \log \text{softmax}(\text{logits}_{ij}) $$
+  </div>
+  <ul>
+    <li>$z_i = \text{normalize}(f(x_i))$ &mdash; L2 归一化后的投射向量</li>
+    <li>$\text{sim}_{ij}$ &mdash; 原始记忆向量间的余弦相似度</li>
+    <li>$\tau$ &mdash; 温度参数 (默认 0.07)</li>
+  </ul>
+  <p class="note">来源: <code>shadow/objectives.py:11-61</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">3.3</span> 奖励加权对比损失 (Reward-Weighted Contrastive Loss)</h3>
+  <div class="math-block">
+    $$ w_i = \max\!\big(0.1,\; 1 + r_i\big) $$
+  </div>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{weighted}} = \frac{\displaystyle\sum_i \mathcal{L}_i \cdot w_i}{\displaystyle\sum_i w_i} $$
+  </div>
+  <p class="desc">高 reward 的记忆获得更大训练权重，低 reward 的记忆被抑制但不会完全消失 (最小权重 0.1)。</p>
+  <p class="note">来源: <code>shadow/objectives.py:64-110</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">3.4</span> 记忆强度评分 (Batch Construction)</h3>
+  <div class="math-block">
+    $$ \text{score}(m) \;=\; I_m \cdot \max\!\big(0.1,\; 1 + r_m\big) $$
+  </div>
+  <p class="desc">按此评分降序排列，取 top-$B$ 构建训练 batch。</p>
+  <p class="note">来源: <code>shadow/gradient.py:38-42</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">3.5</span> 影子权重渐近性质 (Asymptotic Decay)</h3>
+  <p class="desc">当 $t \to \infty$ 且无新记忆输入时:</p>
+  <ol>
+    <li>记忆强度 $I(t) \to 0$ (指数衰减)</li>
+    <li>训练信号 (梯度) $\to 0$ (因 batch 评分 $\propto I_m$)</li>
+    <li>AdamW 的 weight decay 项主导: $\theta_{t+1} \approx (1 - \lambda_{\text{wd}} \cdot \eta)\,\theta_t$</li>
+    <li>残差分支参数 $\theta \to 0$，投射器回归恒等映射 $f(x) \to x$</li>
+  </ol>
+  <div class="math-block">
+    $$ \lim_{t \to \infty} \theta(t) = 0 \quad \Longrightarrow \quad \lim_{t \to \infty} f(x) = x + \text{MLP}_\theta(x) = x $$
+  </div>
+  <p class="note">来源: <code>shadow/manager.py</code> (AdamW with <code>shadow_weight_decay=0.01</code>)</p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">3.6</span> 跨进程 EMA 权重同步</h3>
+  <div class="math-block">
+    $$ \theta_{\text{local}} \;\leftarrow\; (1 - \alpha)\,\theta_{\text{local}} \;+\; \alpha\,\theta_{\text{shadow}} $$
+  </div>
+  <ul>
+    <li>$\alpha$ &mdash; EMA 系数 (默认 0.01)</li>
+    <li>约需 $\sim 1/\alpha = 100$ 次拉取才能完全收敛到新权重</li>
+  </ul>
+  <p class="note">来源: <code>shadow/sync.py:51-64</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. 抗灾难性遗忘 -->
+<!-- ============================================================ -->
+<section id="sec4">
+<h2>4. 抗灾难性遗忘</h2>
+
+<div class="formula">
+  <h3><span class="num">4.1</span> 弹性权重固化 &mdash; EWC (Elastic Weight Consolidation)</h3>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{EWC}} = \lambda \sum_i F_i \cdot (\theta_i - \theta_i^{*})^2 $$
+  </div>
+  <ul>
+    <li>$\theta_i^{*}$ &mdash; 锚点参数 (固化时刻的快照)</li>
+    <li>$F_i$ &mdash; Fisher 信息矩阵对角线元素 (参数重要性)</li>
+    <li>$\lambda$ &mdash; 惩罚系数 (默认 1000.0)</li>
+  </ul>
+  <p class="note">来源: <code>forgetting/ewc.py:31-44</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">4.2</span> Fisher 信息估计 (Diagonal Fisher)</h3>
+  <div class="math-block">
+    $$ \hat{F}_i = \frac{1}{N} \sum_{n=1}^{N} \left(\frac{\partial \mathcal{L}_n}{\partial \theta_i}\right)^{\!2} $$
+  </div>
+  <p class="desc">使用 $N$ 个伪样本 (默认 64) 估计每个参数的重要性。</p>
+  <p class="note">来源: <code>forgetting/ewc.py:53-87</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">4.3</span> 蓄水池采样 &mdash; Experience Replay (Reservoir Sampling)</h3>
+  <p class="desc">对于第 $t$ 个到达的记忆:</p>
+  <div class="math-block">
+    $$ P(\text{replace}) = \begin{cases} 1 & \text{if } |\text{buffer}| < K \\ \dfrac{K}{t} & \text{otherwise, replace random position} \end{cases} $$
+  </div>
+  <ul>
+    <li>$K$ &mdash; 缓冲区大小 (默认 256)</li>
+  </ul>
+  <p class="desc">保证每条历史记忆被保留的概率相等，无论到达顺序。</p>
+  <p class="note">来源: <code>forgetting/replay.py:36-46</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. Transformer 解码器 -->
+<!-- ============================================================ -->
+<section id="sec5">
+<h2>5. Transformer 解码器</h2>
+
+<div class="formula">
+  <h3><span class="num">5.1</span> 缩放点积注意力 (Scaled Dot-Product Attention)</h3>
+  <div class="math-block">
+    $$ \text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right) V $$
+  </div>
+  <ul>
+    <li>$d_k$ &mdash; 每个注意力头的维度</li>
+    <li>自注意力使用因果掩码 (下三角矩阵)，确保自回归性质</li>
+  </ul>
+  <p class="note">来源: <code>transformer/model.py:36-42</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">5.2</span> 记忆交叉注意力 (Memory Cross-Attention)</h3>
+  <div class="math-block">
+    $$ \text{CrossAttn}(Q_{\text{tokens}},\, K_{\text{mem}},\, V_{\text{mem}}) = \text{softmax}\!\left(\frac{Q_{\text{tokens}} K_{\text{mem}}^T}{\sqrt{d_k}} + M_{\text{mask}}\right) V_{\text{mem}} $$
+  </div>
+  <ul>
+    <li>$Q_{\text{tokens}}$ &mdash; 来自 token 序列</li>
+    <li>$K_{\text{mem}},\, V_{\text{mem}}$ &mdash; 来自检索到的记忆向量</li>
+    <li>$M_{\text{mask}}$ &mdash; 记忆填充掩码 (无效位置设为 $-\infty$)</li>
+  </ul>
+  <p class="note">来源: <code>transformer/model.py:46-93</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">5.3</span> 层归一化 (Layer Normalization)</h3>
+  <div class="math-block">
+    $$ \text{LN}(x) = \gamma \cdot \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta $$
+  </div>
+  <p class="desc">采用 Pre-LN 架构: $x = x + \text{Attn}(\text{LN}(x))$</p>
+  <p class="note">来源: <code>transformer/model.py</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">5.4</span> 奖励加权交叉熵损失 (Reward-Weighted Cross-Entropy)</h3>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{token}} = \text{CE}(\hat{y}_t,\, y_t) = -\log P(y_t \mid y_{<t},\, \text{mem}) $$
+  </div>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{sample}}^{(i)} = \frac{\displaystyle\sum_t \mathcal{L}_{\text{token}}^{(i,t)} \cdot \mathbb{1}[y_t \neq \text{PAD}]}{\displaystyle\sum_t \mathbb{1}[y_t \neq \text{PAD}]} $$
+  </div>
+  <div class="math-block">
+    $$ w_i = \max\!\big(0.1,\; 1 + r_i\big) $$
+  </div>
+  <div class="math-block">
+    $$ \mathcal{L}_{\text{total}} = \frac{\displaystyle\sum_i \mathcal{L}_{\text{sample}}^{(i)} \cdot w_i}{\displaystyle\sum_i w_i} $$
+  </div>
+  <p class="desc">Query 部分标签设为 $-100$ (ignore), 仅对 response 部分计算损失。</p>
+  <p class="note">来源: <code>transformer/train.py:119-133</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. 文本生成采样 -->
+<!-- ============================================================ -->
+<section id="sec6">
+<h2>6. 文本生成采样</h2>
+
+<div class="formula">
+  <h3><span class="num">6.1</span> 温度缩放 (Temperature Scaling)</h3>
+  <div class="math-block">
+    $$ \text{logits}' = \frac{\text{logits}}{T} $$
+  </div>
+  <ul>
+    <li>$T > 1$: 更均匀 (更随机)</li>
+    <li>$T < 1$: 更尖锐 (更确定)</li>
+    <li>默认 $T = 0.8$</li>
+  </ul>
+  <p class="note">来源: <code>transformer/generate.py:39-40</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">6.2</span> Top-K 采样</h3>
+  <div class="math-block">
+    $$ P'(w) = \begin{cases} P(w) & \text{if } w \in \text{top-}K \\ 0 & \text{otherwise} \end{cases} $$
+  </div>
+  <p class="desc">保留概率最高的 $K$ 个 token (默认 $K=50$)，其余设为 $-\infty$。</p>
+  <p class="note">来源: <code>transformer/generate.py:42-45</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">6.3</span> 核采样 &mdash; Top-P / Nucleus Sampling</h3>
+  <div class="math-block">
+    $$ V_p = \arg\min_V \left\{ \sum_{w \in V} P(w) \geq p \right\} $$
+  </div>
+  <div class="math-block">
+    $$ P'(w) = \begin{cases} P(w) & \text{if } w \in V_p \\ 0 & \text{otherwise} \end{cases} $$
+  </div>
+  <p class="desc">从累积概率刚好超过 $p$ (默认 0.9) 的最小 token 集合中采样。</p>
+  <p class="note">来源: <code>transformer/generate.py:48-54</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. 编码器 -->
+<!-- ============================================================ -->
+<section id="sec7">
+<h2>7. 编码器</h2>
+
+<div class="formula">
+  <h3><span class="num">7.1</span> L2 归一化</h3>
+  <div class="math-block">
+    $$ \hat{v} = \frac{v}{\|v\| + \epsilon}, \qquad \epsilon = 10^{-8} $$
+  </div>
+  <p class="desc">所有编码器输出统一归一化到单位球面上。</p>
+  <p class="note">来源: <code>encoder/projection.py:74-79</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">7.2</span> 正交初始化 (Orthogonal Initialization)</h3>
+  <div class="math-block">
+    $$ W^T W = I $$
+  </div>
+  <p class="desc">投射层权重矩阵 $W$ 初始化为正交矩阵，保证初始投射不会丢失信息或产生数值问题。</p>
+  <p class="note">来源: <code>encoder/projection.py:40</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8. 正则化 -->
+<!-- ============================================================ -->
+<section id="sec8">
+<h2>8. 正则化</h2>
+
+<div class="formula">
+  <h3><span class="num">8.1</span> 梯度裁剪 (Gradient Clipping)</h3>
+  <div class="math-block">
+    $$ g' = \frac{g}{\max\!\left(1,\; \dfrac{\|g\|}{g_{\max}}\right)} $$
+  </div>
+  <ul>
+    <li>$g_{\max} = 1.0$</li>
+  </ul>
+  <p class="note">来源: <code>shadow/manager.py:83-84</code>, <code>transformer/train.py:137-138</code></p>
+</div>
+
+<div class="formula">
+  <h3><span class="num">8.2</span> 权重衰减 (Weight Decay &mdash; AdamW)</h3>
+  <div class="math-block">
+    $$ \theta_{t+1} = \theta_t - \eta \left(\frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} + \lambda_{\text{wd}} \cdot \theta_t\right) $$
+  </div>
+  <ul>
+    <li>$\lambda_{\text{wd}} = 0.01$</li>
+    <li>$\beta_1 = 0.9,\; \beta_2 = 0.95$ (Transformer), $\;\beta_2 = 0.999$ (Shadow)</li>
+  </ul>
+  <p class="note">来源: <code>transformer/train.py:79-83</code>, <code>shadow/manager.py</code></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9. 参数默认值速查 -->
+<!-- ============================================================ -->
+<section id="sec9">
+<h2>9. 参数默认值速查</h2>
+<table>
+  <thead>
+    <tr><th>符号</th><th>参数</th><th>默认值</th><th>公式出现位置</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$\lambda_{\text{decay}}$</td><td><code>decay_rate</code></td><td>0.01</td><td>指数衰减</td></tr>
+    <tr><td>$\theta_{\text{merge}}$</td><td><code>merge_similarity_threshold</code></td><td>0.8</td><td>时间积分固化</td></tr>
+    <tr><td>$\theta_{\text{consolidation}}$</td><td><code>consolidation_threshold</code></td><td>0.3</td><td>固化最低强度</td></tr>
+    <tr><td>$\theta_{\text{prune}}$</td><td><code>prune_threshold</code></td><td>0.1</td><td>剪枝最低强度</td></tr>
+    <tr><td>$\theta_{\text{promotion}}$</td><td><code>promotion_threshold</code></td><td>0.7</td><td>Warm&#8594;Hot 晋升</td></tr>
+    <tr><td>$T_{\text{demotion}}$</td><td><code>demotion_interval_sec</code></td><td>300s</td><td>Warm&#8594;Cold 降级</td></tr>
+    <tr><td>$\alpha_{\text{reward}}$</td><td><code>reward_weight</code></td><td>0.5</td><td>唤醒评分</td></tr>
+    <tr><td>$\alpha_{\text{EMA}}$</td><td><code>shadow_ema_alpha</code></td><td>0.01</td><td>跨进程权重同步</td></tr>
+    <tr><td>$\lambda_{\text{wd}}$</td><td><code>shadow_weight_decay</code></td><td>0.01</td><td>影子权重衰减 (AdamW)</td></tr>
+    <tr><td>$\tau_{\text{contrast}}$</td><td><code>temperature</code></td><td>0.07</td><td>对比学习</td></tr>
+    <tr><td>$\lambda_{\text{EWC}}$</td><td><code>ewc_lambda</code></td><td>1000.0</td><td>EWC 惩罚</td></tr>
+    <tr><td>$K_{\text{reservoir}}$</td><td><code>replay_buffer_size</code></td><td>256</td><td>蓄水池采样</td></tr>
+    <tr><td>$T_{\text{decode}}$</td><td><code>decoder_temperature</code></td><td>0.8</td><td>生成采样</td></tr>
+    <tr><td>$K_{\text{topk}}$</td><td><code>decoder_top_k</code></td><td>50</td><td>Top-K 采样</td></tr>
+    <tr><td>$p_{\text{nucleus}}$</td><td><code>decoder_top_p</code></td><td>0.9</td><td>核采样</td></tr>
+    <tr><td>$g_{\max}$</td><td><code>max_grad_norm</code></td><td>1.0</td><td>梯度裁剪</td></tr>
+  </tbody>
+</table>
+</section>
+
+</div><!-- /container -->
+</body>
+</html>

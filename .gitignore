@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+.venv2/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data & checkpoints (too large for git)
+dataset/
+output/
+output_ablation/
+TRN/
+TRN.zip
+*.pt
+*.bin
+
+# Misc
+=2.2
+=7.0
+memory_pool.json
+agent_demo_memories.json
+test_logs.json

@@ -1,0 +1,15 @@
+# Core (inference / chat)
+torch>=2.0
+tiktoken>=0.5
+
+# API server (api_server.py)
+fastapi
+uvicorn[standard]
+
+# Evaluation (eval_medical_qa.py)
+numpy
+matplotlib
+dashscope
+rouge-score
+sacrebleu
+bert-score

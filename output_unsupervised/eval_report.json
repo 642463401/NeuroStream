@@ -1,0 +1,846 @@
+{
+  "timestamp": "2026-04-21T23:12:25.501572",
+  "checkpoint": "output_unsupervised/checkpoint_best.pt",
+  "checkpoint_info": {
+    "epoch": 10,
+    "step": 76570,
+    "loss": 3.4672124713865573,
+    "val_loss": 3.5583054721832275
+  },
+  "judge_model": "qwen3-max",
+  "overall_weighted_score": 0.4527,
+  "dimension_aggregated": {
+    "factual_accuracy": {
+      "mean": 4.93,
+      "std": 2.48,
+      "min": 1,
+      "max": 10,
+      "median": 5.0
+    },
+    "relevance": {
+      "mean": 4.03,
+      "std": 1.76,
+      "min": 1,
+      "max": 8,
+      "median": 4.0
+    },
+    "completeness": {
+      "mean": 2.87,
+      "std": 1.12,
+      "min": 1,
+      "max": 6,
+      "median": 3.0
+    },
+    "logic_safety": {
+      "mean": 4.77,
+      "std": 2.55,
+      "min": 1,
+      "max": 10,
+      "median": 5.0
+    },
+    "fluency": {
+      "mean": 7.5,
+      "std": 1.45,
+      "min": 3,
+      "max": 9,
+      "median": 8.0
+    }
+  },
+  "dimension_weights": {
+    "factual_accuracy": 0.3,
+    "relevance": 0.25,
+    "completeness": 0.2,
+    "logic_safety": 0.15,
+    "fluency": 0.1
+  },
+  "nlp_aggregated": {
+    "token_f1": {
+      "mean": 0.1418,
+      "std": 0.0731
+    },
+    "rouge1_f": {
+      "mean": 0.1418,
+      "std": 0.0731
+    },
+    "rouge2_f": {
+      "mean": 0.0313,
+      "std": 0.0374
+    },
+    "rougeL_f": {
+      "mean": 0.1165,
+      "std": 0.0593
+    },
+    "bleu": {
+      "mean": 0.0213,
+      "std": 0.0164
+    },
+    "jaccard": {
+      "mean": 0.0861,
+      "std": 0.0464
+    },
+    "char_f1": {
+      "mean": 0.1407,
+      "std": 0.0735
+    },
+    "bert_score_f1": {
+      "mean": 0.605,
+      "std": 0.0449
+    }
+  },
+  "num_samples": 30,
+  "generation_time_sec": 117.8,
+  "judge_time_sec": 104.5,
+  "total_time_sec": 231.7,
+  "results": [
+    {
+      "idx": 0,
+      "query": "患病时长:半年内 希望提供的帮助：能不能治好 所就诊医院科室：阜新中心医院耳鼻喉科 用药情况：头孢，，",
+      "reference": "有诱因吗？多长时间了？耳呜性质怎样的？",
+      "generated": "这个需要到医院就诊，看看是否有鼻窦炎",
+      "llm_scores": {
+        "factual_accuracy": 7,
+        "relevance": 4,
+        "completeness": 3,
+        "logic_safety": 8,
+        "fluency": 9
+      },
+      "llm_comment": "回答医学事实基本正确但严重偏离患者问题，未回应‘能否治好’的核心关切，且信息极不完整。",
+      "weighted_score": 0.58,
+      "nlp_metrics": {
+        "token_f1": 0.0541,
+        "rouge1_f": 0.0541,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0541,
+        "bleu": 0.0203,
+        "jaccard": 0.0303,
+        "char_f1": 0.0541,
+        "bert_score_f1": 0.58
+      }
+    },
+    {
+      "idx": 1,
+      "query": "希望提供的帮助：跪求，这孩子有救吗 所就诊医院科室：徐州儿童医院儿童重病区",
+      "reference": "术前，手术及术后都有心脏骤停的严重风险，伴有肝肾功能的损伤",
+      "generated": "可能是过敏性紫癜，建议查过敏源，查找原因。",
+      "llm_scores": {
+        "factual_accuracy": 3,
+        "relevance": 2,
+        "completeness": 2,
+        "logic_safety": 2,
+        "fluency": 8
+      },
+      "llm_comment": "回答严重偏离患者问题，将可能危及生命的心脏骤停风险误判为过敏性紫癜，存在重大误诊风险且未回应核心关切。",
+      "weighted_score": 0.29,
+      "nlp_metrics": {
+        "token_f1": 0.12,
+        "rouge1_f": 0.12,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.08,
+        "bleu": 0.0163,
+        "jaccard": 0.0513,
+        "char_f1": 0.12,
+        "bert_score_f1": 0.5644
+      }
+    },
+    {
+      "idx": 2,
+      "query": "颈部涨癣。家里爸爸就有这样的癣，但是涨在手上，头上，我老公的颈部最近几个月才发现，刚开始就只有一点点，慢慢就涨大了，请问这个该怎么治疗，能否根治，是不是家族遗传，外用药用什么药效果好。",
+      "reference": "这不是癣，是神经性皮炎，可以治疗，但容易反复！",
+      "generated": "建议你到正规医院皮肤科就诊，明确诊断后再用药。",
+      "llm_scores": {
+        "factual_accuracy": 8,
+        "relevance": 5,
+        "completeness": 3,
+        "logic_safety": 9,
+        "fluency": 9
+      },
+      "llm_comment": "回答安全且表达流畅，但未回应患者关于诊断、遗传性、治疗及用药等核心问题，信息严重不完整。",
+      "weighted_score": 0.65,
+      "nlp_metrics": {
+        "token_f1": 0.087,
+        "rouge1_f": 0.087,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.087,
+        "bleu": 0.0196,
+        "jaccard": 0.05,
+        "char_f1": 0.087,
+        "bert_score_f1": 0.5994
+      }
+    },
+    {
+      "idx": 3,
+      "query": "片子没有在我这里，唉，都愁死了，医生说韧带一根就得三万五，要是用自体的能花钱少一点，不知道用自体的对身体有没有影响，因为是车祸，不知道人家愿不愿意",
+      "reference": "具体哪个韧带断了知道吗？",
+      "generated": "您好，从片子上看，韧带损伤的可能性很大，但是需要看到片子，如果是腰椎间盘突出症，可以手术治疗，但是你的症状比较明显，建议手术治疗。",
+      "llm_scores": {
+        "factual_accuracy": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "logic_safety": 2,
+        "fluency": 7
+      },
+      "llm_comment": "回答严重偏离患者问题，错误引入腰椎间盘突出症并建议手术，而患者讨论的是韧带重建费用及自体移植影响，存在明显医学误判和安全隐患。",
+      "weighted_score": 0.25,
+      "nlp_metrics": {
+        "token_f1": 0.0519,
+        "rouge1_f": 0.0519,
+        "rouge2_f": 0.0267,
+        "rougeL_f": 0.0519,
+        "bleu": 0.0111,
+        "jaccard": 0.0357,
+        "char_f1": 0.0519,
+        "bert_score_f1": 0.5947
+      }
+    },
+    {
+      "idx": 4,
+      "query": "请问山东省哪家医院做这种手术好？怎么挂号？",
+      "reference": "微创技术还是山东省千佛山医院荣风年主任做的最好！",
+      "generated": "可以到我院门诊，到时候给你加号。",
+      "llm_scores": {
+        "factual_accuracy": 4,
+        "relevance": 3,
+        "completeness": 2,
+        "logic_safety": 5,
+        "fluency": 8
+      },
+      "llm_comment": "回答未明确医院和医生信息，未回应患者关于山东省哪家医院做手术好及如何挂号的核心问题，且‘加号’承诺缺乏具体操作指引，存在误导风险。",
+      "weighted_score": 0.39,
+      "nlp_metrics": {
+        "token_f1": 0.05,
+        "rouge1_f": 0.05,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.05,
+        "bleu": 0.0148,
+        "jaccard": 0.027,
+        "char_f1": 0.05,
+        "bert_score_f1": 0.5438
+      }
+    },
+    {
+      "idx": 5,
+      "query": "胎停后不孕，我今年27岁，孕前检查到右侧多囊卵巢，孕前监测几个周期卵泡，卵泡总是不破。但是，去年11月第一个月正式备孕就通过西药促排，打破卵泡针HCG顺利的怀孕了，但化验血HCG和孕酮都低，就吃补肾安胎丸，8周的时候B超，有胎心，孕囊比实际天数偏小一周多，后来在9周有褐色分泌物，就开始每天注射HCG和黄体酮，但是在10周的时候做B超，没有胎心了，就清宫了。之后检查了优生几项，染色体等等都没有问题，只有封闭抗体有一项阴性。半年后，7月份重新开始备孕，连着两个月通过吃长卵泡的中药，卵泡长得都不错，就是不会自己破，都打了艾泽（hcg）之后才排，可是都没有怀上，大夫让做了输卵管通水，结果很通畅，之后一个月又备孕，又吃长卵泡的中药，打了艾泽HCG排卵，还是没有怀上。前两天又检查了激素六项，也是一切正常。老公也做过检查，也挺正常的。",
+      "reference": "口服避孕药3月后怀孕。",
+      "generated": "建议你们夫妇双方来我院生殖中心就诊。",
+      "llm_scores": {
+        "factual_accuracy": 8,
+        "relevance": 5,
+        "completeness": 3,
+        "logic_safety": 7,
+        "fluency": 9
+      },
+      "llm_comment": "回答虽无医学错误且表达流畅，但过于笼统，未针对患者反复排卵障碍、胎停史及封闭抗体阴性等关键问题提供具体诊疗建议，信息严重不完整，相关性不足。",
+      "weighted_score": 0.62,
+      "nlp_metrics": {
+        "token_f1": 0.069,
+        "rouge1_f": 0.069,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.069,
+        "bleu": 0.0215,
+        "jaccard": 0.037,
+        "char_f1": 0.069,
+        "bert_score_f1": 0.5816
+      }
+    },
+    {
+      "idx": 6,
+      "query": "希望提供的帮助：检查结果：羊水甲胎蛋白：4213IU/ML是否正常？ 所就诊医院科室：河南省人民医院医学遗传研究所",
+      "reference": "甲胎蛋白的检查是河南省人民医院遗传所家检测项目，他们有专门的数据库，分析值是否正常必须向廖世秀老师亲自咨询。",
+      "generated": "你好！请问您现在是什么情况？如果是单纯的，那么你这种情况，建议做羊水穿刺。",
+      "llm_scores": {
+        "factual_accuracy": 3,
+        "relevance": 2,
+        "completeness": 2,
+        "logic_safety": 3,
+        "fluency": 5
+      },
+      "llm_comment": "回答严重偏离患者关于羊水甲胎蛋白数值是否正常的询问，未提供任何相关解释或参考范围，反而在缺乏临床背景的情况下建议羊水穿刺，存在误导和潜在风险。",
+      "weighted_score": 0.275,
+      "nlp_metrics": {
+        "token_f1": 0.1319,
+        "rouge1_f": 0.1319,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0879,
+        "bleu": 0.0099,
+        "jaccard": 0.0519,
+        "char_f1": 0.1319,
+        "bert_score_f1": 0.5596
+      }
+    },
+    {
+      "idx": 7,
+      "query": "龟头红痒。包皮有点长，女朋友得霉菌后做爱龟头红痒，有小红点，以前也犯过很多次，擦百多邦，请问怎么能不复发啊，现在用什么药合适曾经治疗情况和效果：以前犯过用的百多邦。",
+      "reference": "你女朋友有霉菌性阴道炎期间同房要带安全套。少吃辛辣刺激食物，保持局部清洁，每日清洗。可以吃点伊曲康唑，外用酮康唑软膏。",
+      "generated": "建议到医院就诊，看看是不是真菌感染。",
+      "llm_scores": {
+        "factual_accuracy": 8,
+        "relevance": 5,
+        "completeness": 3,
+        "logic_safety": 9,
+        "fluency": 9
+      },
+      "llm_comment": "回答事实基本准确且安全，但过于简略，未回应患者关于用药、复发预防等核心问题，信息严重不完整。",
+      "weighted_score": 0.65,
+      "nlp_metrics": {
+        "token_f1": 0.0779,
+        "rouge1_f": 0.0779,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0519,
+        "bleu": 0.0029,
+        "jaccard": 0.0469,
+        "char_f1": 0.0779,
+        "bert_score_f1": 0.5877
+      }
+    },
+    {
+      "idx": 8,
+      "query": "不清楚，这段时间我经常在晚上睡觉时感觉透不气来，坐起来以后就稍微好些了。白天倒没什么问题，但是一到晚上，特别是半夜，常因透不气来而惊醒。我60岁，女性，平时没什么毛病。",
+      "reference": "建议您先到附近正规医院呼吸内科就诊，明确具体病情。",
+      "generated": "你好，往往是有胃炎的疾病引起的常见的。此种情况往往是可以选择中药和采用中药的治疗的。另外可以配合中药的治疗的。建议平时的保养。保持心情舒畅。",
+      "llm_scores": {
+        "factual_accuracy": 2,
+        "relevance": 3,
+        "completeness": 2,
+        "logic_safety": 2,
+        "fluency": 5
+      },
+      "llm_comment": "回答错误地将夜间阵发性呼吸困难归因为胃炎，忽略了心衰等更可能的严重病因，存在明显医学错误和安全隐患，且未建议及时就医。",
+      "weighted_score": 0.255,
+      "nlp_metrics": {
+        "token_f1": 0.1263,
+        "rouge1_f": 0.1263,
+        "rouge2_f": 0.0215,
+        "rougeL_f": 0.0842,
+        "bleu": 0.0136,
+        "jaccard": 0.0938,
+        "char_f1": 0.1263,
+        "bert_score_f1": 0.5762
+      }
+    },
+    {
+      "idx": 9,
+      "query": "乳腺癌。女，24岁，今年2014年三月份初，右边胸部变大，现在，感觉有肿块。月经已推迟10几天还没来。本人乳头一直内陷，有没有可能是乳腺癌？",
+      "reference": "先到医院做个检查，目前没办法下结论。",
+      "generated": "建议到乳腺外科就诊，明确诊断。",
+      "llm_scores": {
+        "factual_accuracy": 10,
+        "relevance": 8,
+        "completeness": 6,
+        "logic_safety": 10,
+        "fluency": 9
+      },
+      "llm_comment": "回答事实准确、安全且表达流畅，但信息较简略，未充分回应患者关于乳头内陷、月经推迟等具体疑虑，完整性不足。",
+      "weighted_score": 0.86,
+      "nlp_metrics": {
+        "token_f1": 0.1818,
+        "rouge1_f": 0.1818,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.1818,
+        "bleu": 0.0283,
+        "jaccard": 0.1034,
+        "char_f1": 0.1818,
+        "bert_score_f1": 0.6486
+      }
+    },
+    {
+      "idx": 10,
+      "query": "子宫肌瘤，发病六七年了，主要症状月经不准，在区医院看过。",
+      "reference": "如果没有症状暂时不需要手术观察即可，药物治疗无效。",
+      "generated": "你好，肌瘤不大，可以先观察，不用手术，等月经干净后再复查。",
+      "llm_scores": {
+        "factual_accuracy": 7,
+        "relevance": 8,
+        "completeness": 5,
+        "logic_safety": 7,
+        "fluency": 9
+      },
+      "llm_comment": "回答基本准确且切题，但未提及肌瘤大小、症状严重程度等关键评估依据，也忽略了药物治疗无效这一重要信息，完整性不足。",
+      "weighted_score": 0.705,
+      "nlp_metrics": {
+        "token_f1": 0.2963,
+        "rouge1_f": 0.2963,
+        "rouge2_f": 0.0769,
+        "rougeL_f": 0.1852,
+        "bleu": 0.0433,
+        "jaccard": 0.1905,
+        "char_f1": 0.2963,
+        "bert_score_f1": 0.6745
+      }
+    },
+    {
+      "idx": 11,
+      "query": "先天性心脏病，临床诊断Ebstein畸形（I型）卵圆孔未闭三尖瓣狭窄心功能II级（NYHA分级）。",
+      "reference": "手术治疗是最佳方案, 费用大约4-5万, 现在已经该治疗了。",
+      "generated": "可以治疗，但是需要先做心脏彩超检查，如果心脏彩超提示肺动脉瓣狭窄，就需要手术治疗。",
+      "llm_scores": {
+        "factual_accuracy": 3,
+        "relevance": 5,
+        "completeness": 4,
+        "logic_safety": 3,
+        "fluency": 8
+      },
+      "llm_comment": "回答存在明显医学错误（Ebstein畸形涉及三尖瓣而非肺动脉瓣），且未针对患者具体病情提供恰当建议，可能误导诊疗决策。",
+      "weighted_score": 0.42,
+      "nlp_metrics": {
+        "token_f1": 0.2388,
+        "rouge1_f": 0.2388,
+        "rouge2_f": 0.1231,
+        "rougeL_f": 0.1791,
+        "bleu": 0.0716,
+        "jaccard": 0.125,
+        "char_f1": 0.2319,
+        "bert_score_f1": 0.6289
+      }
+    },
+    {
+      "idx": 12,
+      "query": "艾滋病。一月前高危，想咨询下艾滋病检查和传播概率。",
+      "reference": "到医院或疾控中心抽血检查，概率都很小。",
+      "generated": "你好，艾滋病毒检测不会被感染，但是你的检测结果不是很准确，你的情况不需要再检测。",
+      "llm_scores": {
+        "factual_accuracy": 2,
+        "relevance": 4,
+        "completeness": 2,
+        "logic_safety": 1,
+        "fluency": 7
+      },
+      "llm_comment": "回答存在严重医学错误，错误声称检测结果不准确且无需再检，可能延误诊断，具有高风险。",
+      "weighted_score": 0.285,
+      "nlp_metrics": {
+        "token_f1": 0.1356,
+        "rouge1_f": 0.1356,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.1356,
+        "bleu": 0.013,
+        "jaccard": 0.093,
+        "char_f1": 0.1356,
+        "bert_score_f1": 0.6165
+      }
+    },
+    {
+      "idx": 13,
+      "query": "做完主动脉夹层 支架 和搭桥手术。术后两天都很好。第三天晚上 两条腿不能下床了 有知觉 站不了 动不了",
+      "reference": "可能是脊髓缺血引起的",
+      "generated": "你好，根据你的情况，我建议你做一个下肢动脉的CTA，看看有没有动脉狭窄。",
+      "llm_scores": {
+        "factual_accuracy": 5,
+        "relevance": 6,
+        "completeness": 3,
+        "logic_safety": 4,
+        "fluency": 8
+      },
+      "llm_comment": "回答建议CTA检查虽有一定合理性，但严重忽略了术后急性下肢瘫痪最可能的病因——脊髓缺血（如脊髓前动脉综合征），存在延误关键诊断的风险。",
+      "weighted_score": 0.5,
+      "nlp_metrics": {
+        "token_f1": 0.0465,
+        "rouge1_f": 0.0465,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0465,
+        "bleu": 0.0112,
+        "jaccard": 0.0294,
+        "char_f1": 0.0435,
+        "bert_score_f1": 0.5703
+      }
+    },
+    {
+      "idx": 14,
+      "query": "希望提供的帮助：请问医生，该如何治疗？会是肿瘤吗？谢谢 所就诊医院科室：上海第十人民医院内分泌科",
+      "reference": "可以在超声定位下做穿刺活检，待活检结果出来后再决定治疗方案。",
+      "generated": "你好，根据你的描述，应该是良性的，可以定期复查，如果有增大趋势，建议手术。",
+      "llm_scores": {
+        "factual_accuracy": 3,
+        "relevance": 6,
+        "completeness": 4,
+        "logic_safety": 2,
+        "fluency": 8
+      },
+      "llm_comment": "模型回答在缺乏明确诊断依据的情况下武断判断为良性，存在延误诊治风险，且未建议必要的活检等确诊手段，安全性与准确性严重不足。",
+      "weighted_score": 0.43,
+      "nlp_metrics": {
+        "token_f1": 0.1791,
+        "rouge1_f": 0.1791,
+        "rouge2_f": 0.0308,
+        "rougeL_f": 0.1791,
+        "bleu": 0.0262,
+        "jaccard": 0.1154,
+        "char_f1": 0.1791,
+        "bert_score_f1": 0.6465
+      }
+    },
+    {
+      "idx": 15,
+      "query": "子宫内膜增厚刮宫厚半年检查又内膜厚。2013年12月30号月经来了十天没停然后去医院检查，第二天做了诊刮，后来两个月月经都是七八天就干净了，最近三个月又每次都要十几天，并且量很多，中间有吃些中药，6月3号去医院检查又说内膜增厚。",
+      "reference": "建议继续中药积极对证治疗和调理，适当配合孕激素治疗，进一步明确病因。最好坚持基础体温测试，观察是否有正常排卵，大部分内膜增厚功血无排卵。",
+      "generated": "内膜增厚，建议宫腔镜检查。",
+      "llm_scores": {
+        "factual_accuracy": 8,
+        "relevance": 7,
+        "completeness": 4,
+        "logic_safety": 7,
+        "fluency": 9
+      },
+      "llm_comment": "建议宫腔镜检查虽有一定合理性，但严重缺乏对病因分析、排卵评估及激素治疗等关键信息，完整性不足。",
+      "weighted_score": 0.69,
+      "nlp_metrics": {
+        "token_f1": 0.1975,
+        "rouge1_f": 0.1975,
+        "rouge2_f": 0.1013,
+        "rougeL_f": 0.1235,
+        "bleu": 0.0036,
+        "jaccard": 0.1231,
+        "char_f1": 0.1975,
+        "bert_score_f1": 0.6831
+      }
+    },
+    {
+      "idx": 16,
+      "query": "做过两次宫外孕手术切除一侧另一侧开窗取胚。做了手术以后就是有炎症，盆腔炎，然后就是小肚子痛，一直在吃药，这会肚子不痛了，就是月经期不准了老是提前一个星期，",
+      "reference": "我建议你最好做试管婴儿。因为已经发生两次宫外孕了，其中一侧输卵管已经切除了，另一侧也不通，再尝试疏通输卵管有可能还是宫外孕。",
+      "generated": "如果不想做手术，可以来我门诊看看。",
+      "llm_scores": {
+        "factual_accuracy": 5,
+        "relevance": 4,
+        "completeness": 3,
+        "logic_safety": 5,
+        "fluency": 8
+      },
+      "llm_comment": "回答过于简略，未针对患者月经不调和宫外孕史提供实质性医学建议，遗漏关键诊疗信息，存在延误治疗风险。",
+      "weighted_score": 0.465,
+      "nlp_metrics": {
+        "token_f1": 0.1519,
+        "rouge1_f": 0.1519,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.1013,
+        "bleu": 0.0025,
+        "jaccard": 0.1091,
+        "char_f1": 0.1519,
+        "bert_score_f1": 0.5931
+      }
+    },
+    {
+      "idx": 17,
+      "query": "希望提供的帮助：1.是肛瘘吗2能手术吗啥时手术最佳3最佳治疗方案",
+      "reference": "建议先期行结肠造瘘！待肛门部伤口完全愈合后再吻合结肠！这样可以达到痊愈！",
+      "generated": "你好，如果肛瘘不是很大，可以考虑手术治疗，但是如果肛瘘有复发的可能性，建议手术治疗。",
+      "llm_scores": {
+        "factual_accuracy": 5,
+        "relevance": 4,
+        "completeness": 3,
+        "logic_safety": 5,
+        "fluency": 8
+      },
+      "llm_comment": "回答部分提及手术但未明确诊断是否为肛瘘，遗漏关键问题如最佳手术时机和治疗方案，且与参考答案建议的结肠造瘘不符，存在信息不完整和潜在误导风险。",
+      "weighted_score": 0.465,
+      "nlp_metrics": {
+        "token_f1": 0.1538,
+        "rouge1_f": 0.1538,
+        "rouge2_f": 0.0526,
+        "rougeL_f": 0.0769,
+        "bleu": 0.0273,
+        "jaccard": 0.1132,
+        "char_f1": 0.1538,
+        "bert_score_f1": 0.639
+      }
+    },
+    {
+      "idx": 18,
+      "query": "希望提供的帮助：请问如何提高宝宝免疫力，如何提高支原体免疫力，宝宝经常输液身体感觉身体都会搞垮 所就诊医院科室：江苏睢宁人民医院儿科 用药情况：阿奇霉素混悬剂输液输了四天阿奇、头孢、炎琥宁、利巴韦林后，改输头孢、炎琥宁、利巴韦林两天，干吼医生让吃三天阿奇",
+      "reference": "去检查一下是不是有鼻窦炎和过敏性鼻炎",
+      "generated": "你好！宝宝这种情况属于儿童急性咳嗽，建议到医院就诊，必要时可行血常规、肝功能、血常规、肝肾功能、血常规等检查。",
+      "llm_scores": {
+        "factual_accuracy": 5,
+        "relevance": 4,
+        "completeness": 3,
+        "logic_safety": 6,
+        "fluency": 7
+      },
+      "llm_comment": "回答未针对提高免疫力的核心问题，重复检查项目且忽略参考答案提示的鼻窦炎/过敏性鼻炎排查，信息严重不完整。",
+      "weighted_score": 0.47,
+      "nlp_metrics": {
+        "token_f1": 0.0822,
+        "rouge1_f": 0.0822,
+        "rouge2_f": 0.0282,
+        "rougeL_f": 0.0548,
+        "bleu": 0.0146,
+        "jaccard": 0.0566,
+        "char_f1": 0.0822,
+        "bert_score_f1": 0.5816
+      }
+    },
+    {
+      "idx": 19,
+      "query": "几年了 每次到冬天就开始痒 然后起红点 到了夏天就自动消失了 期间涂过药膏",
+      "reference": "请认真阅读问诊单后告诉我你的身体各部感觉，如饮食睡眠质量如何，大小便情况，有无畏寒发热，出汗不出汗，腰腿四肢有无疼痛怕冷愄风",
+      "generated": "这种情况应该是荨麻疹，建议口服抗过敏药物。",
+      "llm_scores": {
+        "factual_accuracy": 4,
+        "relevance": 5,
+        "completeness": 3,
+        "logic_safety": 3,
+        "fluency": 8
+      },
+      "llm_comment": "模型草率诊断为荨麻疹并建议用药，缺乏鉴别诊断和必要问诊，存在误诊和用药风险。",
+      "weighted_score": 0.43,
+      "nlp_metrics": {
+        "token_f1": 0.0723,
+        "rouge1_f": 0.0723,
+        "rouge2_f": 0.0247,
+        "rougeL_f": 0.0723,
+        "bleu": 0.0057,
+        "jaccard": 0.0423,
+        "char_f1": 0.0723,
+        "bert_score_f1": 0.5514
+      }
+    },
+    {
+      "idx": 20,
+      "query": "我8周的时间才做的，下个月10就要做nt了",
+      "reference": "你好。水果冬天冷，可以热水跑热吃，怀孕也要注意饮食。你去医院B超检查看看，好放心。",
+      "generated": "你好，你的情况比较复杂，建议你到我院产科就诊，如果是周三上午，可以带上所有检查资料，来我院产前诊断中心，产前诊断，明确诊断。",
+      "llm_scores": {
+        "factual_accuracy": 6,
+        "relevance": 4,
+        "completeness": 5,
+        "logic_safety": 7,
+        "fluency": 8
+      },
+      "llm_comment": "回答建议就诊有一定合理性，但未理解患者关于孕周和NT检查时间的核心问题，信息不完整且相关性不足。",
+      "weighted_score": 0.565,
+      "nlp_metrics": {
+        "token_f1": 0.2718,
+        "rouge1_f": 0.2718,
+        "rouge2_f": 0.0792,
+        "rougeL_f": 0.2136,
+        "bleu": 0.038,
+        "jaccard": 0.1719,
+        "char_f1": 0.2718,
+        "bert_score_f1": 0.6592
+      }
+    },
+    {
+      "idx": 21,
+      "query": "id=1399132",
+      "reference": "您好。图片我看了，为黑色素细胞痣，建议：切除+植皮或切除+皮瓣转移吧。我认为，手术是解决问题的较好办法。谢谢。",
+      "generated": "可以先做个B超看看，如果没有问题，可以做个超声检查。",
+      "llm_scores": {
+        "factual_accuracy": 3,
+        "relevance": 2,
+        "completeness": 2,
+        "logic_safety": 3,
+        "fluency": 6
+      },
+      "llm_comment": "回答严重偏离问题，未针对黑色素细胞痣提供合理诊疗建议，推荐B超和超声检查无临床意义，可能延误治疗。",
+      "weighted_score": 0.285,
+      "nlp_metrics": {
+        "token_f1": 0.1481,
+        "rouge1_f": 0.1481,
+        "rouge2_f": 0.0253,
+        "rougeL_f": 0.1235,
+        "bleu": 0.0125,
+        "jaccard": 0.0893,
+        "char_f1": 0.1481,
+        "bert_score_f1": 0.6121
+      }
+    },
+    {
+      "idx": 22,
+      "query": "精神分裂症。2012下半年发病（主要时间记不起）吃利培酮症状有好转停药7天复发别人议论我2013上半年吃利培酮发现心律不齐胸闷便秘换药下半年换成奥氮平吃了差不多半年症状发作时出现：思维严重洞悉、别人议论我、到处一切事物都与我有关，我有人格解体的症状感觉周围不真实与自己无关，都是别人在过日子自己好像没有过着一样。精分症状上午不明显下午或晚上加重而人格解体症状平时明显。有时候自己心里自言自语还有脑袋不清晰。我现在吃的是可同牌利培酮剂量是4毫克症状还是时不时发作，2013年一直没好过。",
+      "reference": "算不上难治性精神分裂症，精神分裂症的特点就是这样，容易复发。特别是停药容易复发。再治疗，有时会比第一次治疗剂量大些。如果利培酮效果不好，再加量副作用大，可以换用其他药物，目前用奥氮平，是否出现胃口变大，发胖？如果不明显，可以适当增加剂量。在医生监测下结合临床表现变化调节。另一窗口同一个问题，已经回答。",
+      "generated": "药物治疗是一种维持的过程，不知道你的症状是否有改善，如果没有，可以继续服用。",
+      "llm_scores": {
+        "factual_accuracy": 5,
+        "relevance": 3,
+        "completeness": 2,
+        "logic_safety": 4,
+        "fluency": 7
+      },
+      "llm_comment": "回答过于笼统，未针对患者复杂病史和当前用药问题提供具体、安全的医学建议，存在信息严重缺失和相关性不足的问题。",
+      "weighted_score": 0.395,
+      "nlp_metrics": {
+        "token_f1": 0.2222,
+        "rouge1_f": 0.2222,
+        "rouge2_f": 0.0642,
+        "rougeL_f": 0.1481,
+        "bleu": 0.0039,
+        "jaccard": 0.1579,
+        "char_f1": 0.2222,
+        "bert_score_f1": 0.645
+      }
+    },
+    {
+      "idx": 23,
+      "query": "你好，陆医师。",
+      "reference": "建议致电01066343428预约住院先检查。再决定手术方案。",
+      "generated": "你好，你的病情可以治疗，但是需要结合患者的病情来定。",
+      "llm_scores": {
+        "factual_accuracy": 7,
+        "relevance": 3,
+        "completeness": 2,
+        "logic_safety": 6,
+        "fluency": 8
+      },
+      "llm_comment": "回答过于笼统，未回应患者具体问题，严重缺乏关键诊疗信息，存在延误治疗风险。",
+      "weighted_score": 0.495,
+      "nlp_metrics": {
+        "token_f1": 0.0851,
+        "rouge1_f": 0.0851,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0851,
+        "bleu": 0.0172,
+        "jaccard": 0.0513,
+        "char_f1": 0.0702,
+        "bert_score_f1": 0.5906
+      }
+    },
+    {
+      "idx": 24,
+      "query": "甲状腺结节。这个严重吗？能否吃中药调理好 谢谢您 能否周二早上加个号 谢谢您。",
+      "reference": "从你所提供的体检结论看，结节良性的可能性大，同时伴有桥本甲状腺炎的可能，可以来看一下，若要加号，需早上七点半到名医馆401门口排队登记等候。",
+      "generated": "周三下午，周五上午，周五下午。",
+      "llm_scores": {
+        "factual_accuracy": 1,
+        "relevance": 1,
+        "completeness": 1,
+        "logic_safety": 2,
+        "fluency": 5
+      },
+      "llm_comment": "回答完全偏离患者问题，未涉及甲状腺结节的严重性或中药调理，仅列出无关时间，存在严重答非所问和信息缺失。",
+      "weighted_score": 0.155,
+      "nlp_metrics": {
+        "token_f1": 0.1205,
+        "rouge1_f": 0.1205,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.0964,
+        "bleu": 0.0011,
+        "jaccard": 0.0667,
+        "char_f1": 0.1176,
+        "bert_score_f1": 0.5371
+      }
+    },
+    {
+      "idx": 25,
+      "query": "真情寄语：",
+      "reference": "应该再做一次手术，切除腰5骶1椎间盘。",
+      "generated": "您好，您的情况建议您到当地医院进行手术治疗，不要耽误了。",
+      "llm_scores": {
+        "factual_accuracy": 4,
+        "relevance": 3,
+        "completeness": 3,
+        "logic_safety": 5,
+        "fluency": 8
+      },
+      "llm_comment": "回答缺乏具体诊断依据，未明确对应‘腰5骶1椎间盘’问题，建议过于笼统且可能延误精准治疗。",
+      "weighted_score": 0.41,
+      "nlp_metrics": {
+        "token_f1": 0.1702,
+        "rouge1_f": 0.1702,
+        "rouge2_f": 0.0444,
+        "rougeL_f": 0.1702,
+        "bleu": 0.0318,
+        "jaccard": 0.1,
+        "char_f1": 0.1702,
+        "bert_score_f1": 0.6273
+      }
+    },
+    {
+      "idx": 26,
+      "query": "我想找您拔牙，只有星期二和星期五吗？",
+      "reference": "周二普通门诊，周五专家门诊。",
+      "generated": "不好意思，我没有及时回复你，我也不知道怎么回答你。",
+      "llm_scores": {
+        "factual_accuracy": 10,
+        "relevance": 2,
+        "completeness": 1,
+        "logic_safety": 8,
+        "fluency": 6
+      },
+      "llm_comment": "回答完全未回应患者关于出诊时间的核心问题，信息严重缺失，虽无医学错误但毫无实用价值。",
+      "weighted_score": 0.55,
+      "nlp_metrics": {
+        "token_f1": 0.1026,
+        "rouge1_f": 0.1026,
+        "rouge2_f": 0.0,
+        "rougeL_f": 0.1026,
+        "bleu": 0.0179,
+        "jaccard": 0.069,
+        "char_f1": 0.1026,
+        "bert_score_f1": 0.5292
+      }
+    },
+    {
+      "idx": 27,
+      "query": "贲门粘膜下隆起考虑平滑肌瘤可能。体检胃镜时无意中发现贲门附近有一个粘膜下隆起，用普通胃镜测直径约8毫米，后来去了当地三甲医院做的超生胃镜，直径5毫米，做胃镜的医生说我这个是一个平滑肌瘤，说没事不用管，后来又找了消化科医生看了一下，他说这没事不用管，实在不放心三四年在复查一下就可以。不知道有事没事，请专家指教，谢谢。",
+      "reference": "您好，有基础疾病吗？比如高血压，糖尿病，冠心病等？近期服用什么药物了吗？",
+      "generated": "您好，您的情况比较复杂，建议您来我院做个超声胃镜检查，明确诊断。",
+      "llm_scores": {
+        "factual_accuracy": 6,
+        "relevance": 4,
+        "completeness": 3,
+        "logic_safety": 5,
+        "fluency": 8
+      },
+      "llm_comment": "回答建议重复已做过的超声胃镜检查，忽视患者已明确完成该检查并获专业医生评估的事实，信息冗余且未回应患者核心疑虑，存在不必要的医疗建议风险。",
+      "weighted_score": 0.495,
+      "nlp_metrics": {
+        "token_f1": 0.1765,
+        "rouge1_f": 0.1765,
+        "rouge2_f": 0.0606,
+        "rougeL_f": 0.1765,
+        "bleu": 0.0453,
+        "jaccard": 0.0755,
+        "char_f1": 0.1765,
+        "bert_score_f1": 0.5679
+      }
+    },
+    {
+      "idx": 28,
+      "query": "甲状腺乳头状癌。",
+      "reference": "需要到肿瘤医院行碘131治疗。",
+      "generated": "建议手术，术后辅助化疗，术后辅助放疗。",
+      "llm_scores": {
+        "factual_accuracy": 2,
+        "relevance": 5,
+        "completeness": 3,
+        "logic_safety": 2,
+        "fluency": 8
+      },
+      "llm_comment": "回答存在严重医学错误：甲状腺乳头状癌通常首选手术，术后根据风险分层决定是否行碘131治疗，而非常规辅助化疗或放疗；该建议可能误导患者接受不必要且有害的治疗。",
+      "weighted_score": 0.355,
+      "nlp_metrics": {
+        "token_f1": 0.125,
+        "rouge1_f": 0.125,
+        "rouge2_f": 0.0667,
+        "rougeL_f": 0.125,
+        "bleu": 0.0405,
+        "jaccard": 0.087,
+        "char_f1": 0.1176,
+        "bert_score_f1": 0.6606
+      }
+    },
+    {
+      "idx": 29,
+      "query": "甲状旁腺病变。2014年9月体检发现甲状旁腺病变，全身不舒服。有新资料上传。请帮忙看看检查报告，谢谢。",
+      "reference": "甲状旁腺功能亢进，建议再行甲状旁腺双时差显像定位后，手术。",
+      "generated": "您好！您的甲状腺功能正常，但是甲状腺功能正常，甲状腺功能正常，不需要治疗，定期复查即可。",
+      "llm_scores": {
+        "factual_accuracy": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "logic_safety": 1,
+        "fluency": 3
+      },
+      "llm_comment": "回答严重混淆甲状腺与甲状旁腺，给出错误诊断和不安全建议，完全偏离患者问题且存在重复语句。",
+      "weighted_score": 0.195,
+      "nlp_metrics": {
+        "token_f1": 0.3288,
+        "rouge1_f": 0.3288,
+        "rouge2_f": 0.1127,
+        "rougeL_f": 0.3014,
+        "bleu": 0.0521,
+        "jaccard": 0.1905,
+        "char_f1": 0.3288,
+        "bert_score_f1": 0.7015
+      }
+    }
+  ]
+}

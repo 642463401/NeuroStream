@@ -4,6 +4,57 @@
 
 ---
 
+## [0.2.0] - 2026-05-12
+
+方案 A 持续学习训练框架落地。回归 README 原始定位：记忆 + 影子权重 + 双进程 +
+Memory-Conditioned cross-attention 全部进入训练路径。早期 V3 GPT-style 监督预训练
+脚本下线，仓库改为单一训练入口。
+
+### 训练入口收敛
+
+- 新增 `train.py` 作为唯一训练入口，覆盖 Phase 1 / Phase 2 持续学习与 `--eval-only` /
+  `--distill` 子模式
+- 下线 `train_medical.py` / `train_medical_unsupervised.py` / `run_ablation.py` /
+  `api_server.py` / `chat.py` / `eval_medical_qa.py` / `clean_medical_data.py` /
+  `test_pipeline.py` / `main.py` / `memory_pool.py` / `encoder.py` 等历史脚本
+- 新增 `prepare_phase2_data.py`：用 phase1 query MD5 集合（24 万+）过滤原始流，
+  生成不与 phase1 重叠的 phase2 数据
+
+### 训练路径修复
+
+- **cross-attn 实际见到记忆** — `engine.teach()` 把 query_vec 传给 learning_worker，
+  避免 `memory_vectors=zeros(0, dim)` 的空向量训练
+- **ConversationBuffer 600K** — `transformer/config.py` 新增 `conversation_buffer_size`
+  字段（默认 600K），修复主进程 push 比 decoder 消费快 13× 导致 92% 数据被静默丢弃
+- **`pool.decay()` dt 钳制** — 新增 `max_dt=5` 与显式 `dt` 参数，杜绝 snapshot/暂停
+  期间累积秒数被一次性 decay 掉，pool 从 179K 一次性掉到 21 的事故
+- **inference 同步 decoder 权重** — `engine.start()` 把 resume 的 decoder_state 灌进
+  `self._decoder`；`inference.py` 加 5s 周期主动 pull，避免推理端始终用随机权重
+- **生成不回灌训练** — `inference._handle_generate()` 移除把生成的 (query, AI 回答)
+  推回 `conversation_q`/`memory_q` 的逻辑，杜绝模型拟合自己输出导致的 loss 假性骤降
+- **`wait_drain()`** — `train.py` 新增 push-完后让 decoder 继续训练 N 分钟的接口，
+  并只通过 `conversation_q` 判断队列空（绕开 Windows `mp.Queue.qsize()` 子进程消费
+  后不递减的 bug）
+
+### 评估改进
+
+- `train.py:_score_one()` 在开放医学问答上引入 `char_overlap` / `bigram_jaccard` /
+  `len_ratio` / `empty_rate`，替代必然为 0% 的 substring `strict_match`
+
+### 配置
+
+- `NeuroStreamConfig.decoder_buffer_size: int = 600_000`
+- `TransformerConfig.conversation_buffer_size: int = 600_000`
+- `from_neurostream_config()` 透传上述字段
+
+### 当前可用快照
+
+- `output/phase1/snapshot_final.pt` — 874 MB，3785 decoder steps，220K memories
+- `output/phase1_more/snapshot_final.pt` — 880 MB，~5000 steps，225K memories，
+  loss 11.5 → 2.7（perplexity ≈ 15）
+
+---
+
 ## [0.1.0] - 2026-04-10
 
 首次公开发布。包含完整的记忆增强框架、双进程运行时、Transformer 解码器、工具系统和 Agent 训练闭环。

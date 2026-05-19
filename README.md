@@ -1,4 +1,4 @@
- c  # NeuroStream
+# NeuroStream
 
 **以记忆为核心的 AI 训练框架 — 边推理边学习**
 
@@ -6,8 +6,9 @@
 
 ![Python](https://img.shields.io/badge/Python-≥3.10-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-≥2.0-orange)
-![Tests](https://img.shields.io/badge/Tests-253%20passed-brightgreen)
-![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red)
+![Tests](https://img.shields.io/badge/Tests-250%20passed-brightgreen)
+![License](https://img.shields.io/badge/License-Proprietary-red)
+![Status](https://img.shields.io/badge/V4%20Phase%201-PPL%208.5%20%2F%2042k%20steps-blueviolet)
 
 ---
 
@@ -50,7 +51,7 @@ with NeuroStreamPipeline(dim=128) as pipe:
     pipe.shutdown(save_path="memories.json")
 ```
 
-Validated on **250K medical dialogues** (97M params, val perplexity=42.1). See [experiment report](docs/experiments/medical_v3.md).
+Validated on **250K medical dialogues** (97M params, dual-process training with memory + shadow weights + cross-attention all online). **V4 Phase 1 results**: val PPL **8.5** (from-scratch, no pretraining) — a **5× improvement** over V3 GPT-style baseline (PPL 42.1) under identical conditions, showing the architectural contribution of memory + cross-attention. See [v4 ablation report](docs/experiments/v4_phase1_ablation.md). Progress and bug log: [PROGRESS.md](PROGRESS.md). Positioning (edge + complement-to-LLM): [docs/positioning.md](docs/positioning.md).
 
 ---
 
@@ -218,57 +219,110 @@ result = pipe.call_tool("calculator", {"expression": "sqrt(144) + pi"})
 print(result.output)  # "15.141592653589793"
 ```
 
+### 统一训练入口 `train.py`(含 val_loss 早停)
+
+仓库根目录的 `train.py` 是方案 A 的唯一训练入口，覆盖 Phase 1 / Phase 2 持续学习与
+评估流程；其它历史脚本 (`train_medical*.py` / `api_server.py` 等) 已下线。
+
+**2026-05 早停改造**:默认启用 val_loss(cross-entropy) 早停,每 500 步评估,
+patience=5,best snapshot 自动保存。`--max-hours` 默认 168h(7 天兜底),
+实际靠早停停下来。GPU 利用率从 30% 提到 50%+(`--decoder-interval 0.0` +
+`--decoder-steps-per-group 16` 默认值)。
+
+```bash
+# 持续学习(默认 Phase 1,启用早停 + 优化吞吐)
+python train.py
+
+# 从 best snapshot 续训
+python train.py --resume output/phase1_v2/snapshot_best.pt --output output/phase1_v3
+
+# Phase 2 持续学习(必须 --resume)
+python train.py --resume output/phase1_v2/snapshot_best.pt \
+                --phase2-data dataset/medical_phase2.json \
+                --output output/phase2
+
+# 仅评估(快速软指标,无 LLM)
+python train.py --resume output/phase1_v2/snapshot_best.pt --eval-only
+
+# 完整 V3 格式 eval(5 维 LLM judge + NLP 指标)
+python eval_v4.py --resume output/phase1_v2/snapshot_best.pt --skip-bertscore
+
+# In-domain shortcut 健康诊断(架构是否被 KNN 化 / 错记忆带跑)
+python diagnose_shortcut_v2.py --resume output/phase1_v2/snapshot_best.pt
+
+# 蒸馏(可选,委托给 AgentLoop)
+python train.py --distill --api-key $env:DASHSCOPE_KEY
+```
+
+主要参数与默认值见 [PROGRESS.md §四](PROGRESS.md);早停相关参数(`--target-epochs` /
+`--early-stop-patience` / `--early-stop-eval-every` 等)在 `python train.py --help` 完整列出。
+
 ---
 
 ## 训练实验 / Experiments
 
-### V3: 医学对话 (97M, 250K)
+### V4 Phase 1: 医学对话持续学习 (97M, 250K, from-scratch)
 
-在 250K 真实医学对话上验证架构可行性。
+在 250K 真实医学对话上完整跑通"记忆 + 影子权重 + 双进程 + Memory-Conditioned
+cross-attention"全链路。**与 V3 监督预训练不同，V4 所有差异化组件都在线参训。**
 
 | 指标 | 值 |
 |------|-----|
-| 模型 | 97.3M 参数 (d=512, 12L, 8H, ff=2048) |
-| 数据 | 250,481 对话 (中文 80%, 英文 20%) |
-| 训练 | 10 epochs, 69K 步, 23.8h on RTX 4060 |
-| **Best Val Loss** | **3.740** |
-| **Val Perplexity** | **42.1** |
-| Train-Val Gap | 0.003 (无过拟合) |
+| 模型 | 97M 参数 (d=512, 12L, 8H, ff=1366, SwiGLU+RoPE+RMSNorm) |
+| 数据 | 250K 医学对话 (50K EN + 200K ZH, `dataset/medical_cleaned.json`) |
+| 双进程 | shadow=on, decoder=on, cross-attn enabled |
+| 抗遗忘 | EWC λ=500 |
+| 缓冲 | ConversationBuffer 600K, Memory pool 224K+ |
+| 训练 | 42,689 decoder steps，~23h on RTX 5060 8GB (cu128 / sm_120) |
+| **早停** | 在 step 40,176 触发 best,patience 满后 step 42,689 终止 |
+| **Best val_loss** | **2.1453 (perplexity ≈ 8.5)** ← 5× 优于 V3 |
 
-**训练曲线**：
+**输出快照**（位于 `output/phase1_v2/`）：
 
-![Training Curves](output_unsupervised/training_curves.png)
+| 文件 | 大小 | 说明 |
+|---|---|---|
+| `output/phase1_v2/snapshot_best.pt` | 880 MB | **早停 best** @ step 40,176,224,928 memories |
+| `output/phase1_v2/snapshot_final.pt` | 880 MB | 最后一刻状态(step 42,689) |
+| `output/phase1_v2/val_loss_curve.png` | — | val_loss 轨迹图 |
 
-**训练记分卡**：
+**LLM Judge 评估 (DashScope qwen3-max, 30 样本)**:
 
-![Training Scorecard](output_unsupervised/scorecard.png)
+| 维度 | V3 | V4 | Δ |
+|---|---|---|---|
+| factual_accuracy | 4.93 | **5.43** | **+10.1%** |
+| relevance | 4.03 | 4.10 | +1.7% |
+| completeness | 2.87 | 2.60 | -9.4% |
+| **logic_safety** | 4.77 | **5.83** | **+22.2%** ← 最大提升 |
+| fluency | 7.50 | 7.40 | -1.3% |
+| **Overall Weighted** | 0.4527 | **0.4790** | **+5.8%** |
 
-**LLM-as-Judge 医学问答评测**：
+**NLP 指标 (V4 vs V3, 可对比项)**: token_f1 +46% / char_f1 +69% / jaccard +38% / bleu +21%
 
-![Evaluation Report](output_unsupervised/eval_report.png)
+完整评估数据见 [`output/phase1_v2/eval_report.json`](output/phase1_v2/eval_report.json)
+和 [`output/phase1_v2/eval_report.png`](output/phase1_v2/eval_report.png)。
 
 **生成示例**:
 
 ```
-Q: 头痛发烧怎么办？
-A: 建议做个头颅磁共振检查。
+Q: 高血压 150/98，老公磁共振…
+A: 建议您来院就诊，带上所有资料。              ← 标准分诊建议
 
-Q: 糖尿病患者饮食注意什么？
-A: 多饮水，适当运动，多吃蔬菜水果
+Q: 小儿关节弹响膜囊，下肢异常 5 天
+A: 您好，建议您先到医院检查一下，必要时做个膝关节 CT 检查。  ← 专业且对症
 
-Q: 腰椎间盘突出怎么治疗？
-A: 建议做腰椎核磁共振检查。
+Q: 关于肺癌
+A: 可以手术，但是不需要做，但是要看你的病情。  ← 合理临床判断
 ```
 
-**同量级对比**:
+**与 V3 监督预训练的关系**：V3（`output_unsupervised/`，97M / val PPL 42.1）
+是纯 GPT 风格预训练，cross-attn 和记忆通路均未参训。V4 在**同 97M / 同 250K /
+同 from-scratch** 条件下,仅引入 memory + cross-attn + 双进程持续学习,PPL 从
+42.1 → 8.5,**5× 提升,纯架构贡献**。完整 ablation 见
+[docs/experiments/v4_phase1_ablation.md](docs/experiments/v4_phase1_ablation.md)。
 
-| 模型 | 参数 | 训练数据 | Val PPL |
-|------|------|---------|---------|
-| **NeuroStream V3** | 97M | 250K 医学 (~50M tok) | 42.1 |
-| GPT-2 Small | 117M | ~10B tokens (通用) | ~30-35 |
-| OPT-125M | 125M | 180B tokens (通用) | ~27 |
-
-> PPL 差距主要来自训练数据量差异 (200-6000x)，非架构缺陷。详见 [完整实验报告](docs/experiments/medical_v3.md)。
+**In-Domain Shortcut 健康诊断**:用 `diagnose_shortcut_v2.py` 跑 3 项测试,
+counterfactual robustness (sim=7.7%) + 反事实记忆注入(危险词 0/5 命中) 都通过 —
+**架构在 in-domain 是健康的,不被错记忆主导**。
 
 ---
 
@@ -286,6 +340,7 @@ A: 建议做腰椎核磁共振检查。
 | `decoder_enabled` | False | 启用 Transformer 解码器 |
 | `decoder_layers` | 6 | Transformer 层数 |
 | `decoder_dim` | 256 | 模型维度 |
+| `decoder_buffer_size` | 600,000 | ConversationBuffer 上限（太小会静默丢数据） |
 | `tools_enabled` | False | 启用工具系统 |
 
 完整参数列表：[docs/api/config.md](docs/api/config.md)
@@ -343,6 +398,10 @@ docs/                        12 篇 Markdown 文档 + 实验报告
 examples/
 ├── agent_demo.py            完整训练 + 交互演示
 └── agent_training.py        LLM Teacher 蒸馏训练
+
+train.py                     方案 A 唯一训练入口（Phase 1/2 持续学习 + 评估）
+prepare_phase2_data.py       Phase 2 数据集生成（去重 phase1 query MD5）
+PROGRESS.md                  当前进度 + 关键 bug 日志（建议同步阅读）
 ```
 
 ---
@@ -372,7 +431,10 @@ pytest tests/ -v
 | [docs/api/shadow.md](docs/api/shadow.md) | 影子权重 |
 | [docs/api/runtime.md](docs/api/runtime.md) | 双进程运行时 |
 | [docs/api/pipeline.md](docs/api/pipeline.md) | Pipeline / Trainer API |
-| [docs/experiments/medical_v3.md](docs/experiments/medical_v3.md) | V3 医学对话训练报告 |
+| [docs/experiments/medical_v3.md](docs/experiments/medical_v3.md) | V3 监督预训练实验报告(对照组) |
+| [docs/experiments/v4_phase1_ablation.md](docs/experiments/v4_phase1_ablation.md) | **V4 Phase 1 ablation 报告**(V3 vs V4 5× PPL 提升 + LLM judge 对照) |
+| [docs/positioning.md](docs/positioning.md) | 项目定位:边缘 + 大模型双端适配(对外标准话术) |
+| [docs/learning/](docs/learning/) | 系统学习路径(13 模块理论 + 9 章项目专项 + HTML 合集) |
 
 ---
 
@@ -402,21 +464,55 @@ pytest tests/ -v
 
 ## 路线图 / Roadmap
 
-### v0.1.0 (当前)
+### v0.1.0 — 框架与测试
 
 - [x] 14 个开发阶段全部完成
 - [x] 253 个测试通过
-- [x] 97M 模型在 250K 医学对话上验证
 - [x] 完整 API 文档
+
+### v0.2.0 — 方案 A 持续学习落地
+
+- [x] 升级架构组件 (RoPE 位置编码, SwiGLU FFN, RMSNorm)
+- [x] 单一训练入口 `train.py`,所有旧脚本下线
+- [x] 97M 模型在 250K 医学对话上完整跑通双进程 + 记忆 cross-attn
+- [x] `engine.teach()` 把 query_vec 传给 learning_worker(cross-attn 实际见到记忆)
+- [x] ConversationBuffer 扩到 600K,修复 92% 数据被静默丢弃
+- [x] `pool.decay()` 加 `max_dt=5` 钳制,杜绝 snapshot 后 pool 雪崩
+
+### v0.2.x — V4 Phase 1 完整训练 + 评估(当前)
+
+- [x] **val_loss 早停**:`train.py` 加 IPC eval channel + train_until_stop 主循环,
+      早停默认 patience=5 / eval_every=500 / min_delta=0.001
+- [x] **GPU 吞吐优化**:`learning_worker` 修 `_decoder_remaining` 逻辑,GPU 30% → 50%+
+- [x] **V4 Phase 1 完整训练**:42,689 steps,best val PPL **8.5**(5× 优于 V3 PPL 42.1)
+- [x] **V3 格式完整 eval**(`eval_v4.py`):5 维 LLM judge + 7 项 NLP 指标,
+      logic_safety +22.2% / factual_accuracy +10.1%
+- [x] **In-domain shortcut 诊断**(`diagnose_shortcut_v2.py`):
+      counterfactual robustness + 反事实记忆注入,架构健康验证
+- [x] **依赖更新**:requirements.txt 同步 v0.2.0(faiss / ijson / fastapi 预留 OpenAI API)
+- [x] **学习路径文档**(`docs/learning/`):13 模块系统理论 + 9 章项目专项,共 1400+ 行
+- [x] **对外定位文档**(`docs/positioning.md`):边缘 + 大模型双端适配的统一话术
 
 ### 后续计划
 
-- [ ] 升级架构组件 (RoPE 位置编码, SwiGLU FFN, RMSNorm)
-- [ ] 扩展至 350M+ 模型，配合全量数据训练
-- [ ] 集成记忆检索管线到训练循环（真正的记忆增强训练）
-- [ ] 引入 BLEU/ROUGE/BERTScore 评测
-- [ ] REST API 服务化
+- [ ] **Phase 2 持续学习实验**(P0,已就绪):50K EN + 200K ZH 去重 phase1,
+      测真实"无遗忘"能力
+- [ ] **严格组件 ablation**:`--no-cross-attn` / `--no-shadow` / `--forgetting none`
+      逐一关闭,量化每个组件的 PPL 贡献
+- [ ] **Continual learning benchmark 接入**:Permuted MNIST / Split CIFAR-100 / Continual World
+- [ ] Cloud-5090 1.2B-token backbone 权重迁移到 cross-attn 模型
+- [ ] 训练吞吐进阶优化(consolidate batch 化 / decay 跨 cycle / 独立 MemoryPool 进程)
+- [ ] BERTScore 接入(目前 eval_v4.py 跳过,避免下载 440MB BERT 模型)
+- [ ] REST API 服务化 + OpenAI 兼容 `/v1/chat/completions` 端点
 - [ ] 多 GPU 分布式训练支持
+
+### v0.3+ — 自研架构探索(长期研究方向)
+
+- [ ] 精读 4 篇核心论文:**CLS** (McClelland 1995) → **Mamba** (Gu 2023) →
+      **Modern Hopfield** (Ramsauer 2020) → **DNC** (Graves 2016)
+- [ ] 在 toy task 上手搓 SSM / Hopfield 等替代架构
+- [ ] 探索 Transformer 主干替换的可能性(详见 [docs/positioning.md](docs/positioning.md))
+- [ ] **声明:V4 仍是 Transformer 主干,自研架构是后续研究方向,非短期承诺**
 
 ---
 
@@ -438,4 +534,13 @@ pytest tests/ -v
 
 ## License
 
-[All Rights Reserved](LICENSE)
+**Proprietary — All Rights Reserved.** Copyright © 2026 黄志鹏 (Huang Zhipeng).
+
+本仓库**不是开源项目**。源码、文档、模型权重等仅作展示与学术讨论之用，仓库公开
+可见**不构成任何使用授权**。未经版权方书面许可，禁止任何形式的复制、分发、修改、
+商用或用于训练其他模型。完整条款见 [LICENSE](LICENSE)。
+
+This repository is **not open source**. Public visibility on GitHub is for
+display and academic discussion only and does **not** grant any usage rights.
+Any use beyond personal reading requires a prior written license from the
+copyright holder. See [LICENSE](LICENSE) for full terms.

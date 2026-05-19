@@ -1,6 +1,16 @@
 # Contributing to NeuroStream / 贡献指南
 
-感谢你对 NeuroStream 的关注！以下是参与项目的指南。
+> ⚠️ **专有项目说明 / Proprietary Notice**
+>
+> NeuroStream 在 [LICENSE](LICENSE) 下为**专有软件，保留所有权利**。仓库虽公开
+> 可见，但不接受外部 fork/复制/再分发，也不对外开放 PR 流程。本文件仅供经版权方
+> **书面授权**的协作者参考其内部开发约定。
+>
+> NeuroStream is proprietary software under [LICENSE](LICENSE). The repository
+> is publicly visible for display only — it is **not** an open-source project,
+> and external pull requests are not accepted. This document is intended for
+> collaborators who have received **prior written authorization** from the
+> copyright holder.
 
 ---
 

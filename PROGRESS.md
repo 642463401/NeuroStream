@@ -1,356 +1,287 @@
-# NeuroStream 项目进度报告
+# NeuroStream 项目进度
 
-> 最后更新: 2026-04-10
-> 版本: 0.6.0
-> 状态: **Agent 闭环完成，支持 LLM Teacher 蒸馏训练 + 论文风格 Matplotlib 评测表**
+> 最后更新: 2026-05-09
+> 当前定位: **持续学习训练框架**（方案 A 落地中）
+> Phase 1 状态: ✅ 训练通路打通，模型可生成连贯医学回答，待 Phase 2 测持续学习
 
 ---
 
 ## 一、项目定位
 
-**以记忆为核心的 AI 训练框架** — 区别于所有现有 AI 框架。
+NeuroStream 是一个**以记忆为核心、边推理边学习**的训练框架。
+严格遵循 `docs/architecture.md` 中的设计：
 
-- 核心哲学: Memory 是一等公民，不是 Tensor + autograd
-- 核心能力: 边推理边学习，推理进程和学习进程完全解耦
-- 核心差异: 影子权重（模型权重真正在变化，而非 RAG 式检索）
-- 生物隐喻: 皮层（快思考/推理） + 海马体（慢思考/巩固）
+- **双进程**：`NeuroStreamEngine` 同时跑推理进程 + 学习进程，互不阻塞
+- **记忆池**：FAISS Hot/Warm/Cold 分层 + 时间衰减 + 固化 + 剪枝
+- **影子权重**：`MemoryProjector` + `SharedWeightBuffer` 跨进程 EMA 同步
+- **记忆增强 Transformer**：每层 cross-attention 读取记忆 K/V
+- **抗灾难性遗忘**：EWC / Experience Replay
+- **生物隐喻**：皮层（推理）+ 海马体（固化）
+
+**新增架构原则（2026-05-09）**：
+> AI 的输出**永不进入训练管道**。知识只能通过应用层显式 `engine.ingest()` /
+> `engine.teach()` 注入。`engine.generate()` 是纯只读推理，不写记忆池、不写
+> conversation_buffer。
+
+理由：模型训练自己的输出是退化的自蒸馏，会让 loss 假性骤降到 0.04 以下、
+量化指标失真，且违背"知识来自外部"的契约。
 
 ---
 
-## 二、架构总览
+## 二、Phase 1 训练成果（2026-05-09）
 
+### 训练配置
+
+| 参数 | 值 |
+|---|---|
+| 数据 | 250K 医学对话 (50K EN + 200K ZH, `dataset/medical_cleaned.json`) |
+| 模型 | 95M 参数（d=512, 12L, 8H, ff=1366, SwiGLU+RoPE+RMSNorm） |
+| 双进程 | shadow=on, decoder=on, cross-attn enabled |
+| 抗遗忘 | EWC λ=500 |
+| 内存 | ConversationBuffer 600K, Memory pool 220K+ |
+
+### 两轮训练快照
+
+| 文件 | 大小 | 说明 |
+|---|---|---|
+| `output/phase1/snapshot_final.pt` | 874 MB | 首轮训练，3785 decoder steps，220K memories |
+| `output/phase1_more/snapshot_final.pt` | 880 MB | resume 续训 4h，~5000 decoder steps，225K memories |
+
+### 模型质量（基于 `output/phase1_more` eval）
+
+软指标：
 ```
-neurostream/                          Python 包，pip install -e . 可用
-├── types.py                          Memory / Modality / TierLevel
-├── config.py                         NeuroStreamConfig (30+ 参数)
-│
-├── encoder/                          可插拔多模态编码器
-│   ├── base.py                       EncoderBase (ABC)
-│   ├── projection.py                 ProjectedEncoder (维度适配基类)
-│   ├── text.py                       FeatureHashEncoder (n-gram hash, 零依赖)
-│   ├── sbert.py                      SBERTEncoder (sentence-transformers)
-│   ├── image.py                      CLIPImageEncoder (open_clip)
-│   ├── audio.py                      WhisperAudioEncoder (openai-whisper)
-│   └── unified.py                    UnifiedEncoder (注册表 + 工厂方法)
-│
-├── memory/                           记忆管理
-│   ├── index.py                      IndexBackend ABC + FaissBackend
-│   ├── buffer.py                     ShortTermBuffer (线程安全)
-│   ├── pool.py                       MemoryPool (FAISS + 依赖注入)
-│   └── tiered.py                     TieredMemoryPool (Hot/Warm/Cold)
-│
-├── consolidation/                    可插拔固化策略
-│   ├── base.py                       ConsolidationStrategy ABC
-│   └── time_integral.py              S_t = S_{t-1} * decay + I_new
-│
-├── shadow/                           影子权重 (核心差异化)
-│   ├── projector.py                  MemoryProjector (残差MLP, zero-init)
-│   ├── sync.py                       SharedWeightBuffer (share_memory_)
-│   ├── objectives.py                 ContrastiveLoss + RewardWeightedContrastiveLoss
-│   ├── gradient.py                   MemoryGradientComputer (reward-weighted batch)
-│   └── manager.py                    ShadowWeightManager
-│
-├── forgetting/                       抗灾难性遗忘
-│   ├── base.py                       ForgettingStrategy ABC + NoOp
-│   ├── ewc.py                        EWC (对角 Fisher 惩罚)
-│   └── replay.py                     ExperienceReplay (蓄水池采样)
-│
-├── runtime/                          双进程运行时
-│   ├── channels.py                   ChannelSet (6条类型化Queue)
-│   ├── inference.py                  推理进程
-│   ├── learning.py                   学习进程
-│   └── engine.py                     NeuroStreamEngine
-│
-├── feedback/                         反馈系统
-│   ├── base.py                       FeedbackProvider ABC + FeedbackResult
-│   ├── llm_scorer.py                 LLMScorer (OpenAI 兼容 API)
-│   └── human.py                      HumanFeedback (直接透传)
-│
-├── transformer/                      Transformer 解码器 (NeuroStream 推理核心)
-│   ├── config.py                     TransformerConfig
-│   ├── tokenizer.py                  Tokenizer (tiktoken cl100k_base)
-│   ├── model.py                      MemoryConditionedTransformer (~32M params)
-│   ├── generate.py                   自回归生成 (top-k/top-p/temperature)
-│   └── train.py                      TransformerTrainer + ConversationBuffer
-│
-├── tools/                            工具系统 (Phase 13)
-│   ├── base.py                       Tool ABC + ToolResult + ToolCall
-│   ├── registry.py                   ToolRegistry (注册/执行/超时)
-│   ├── builtin/                      内置工具
-│   │   ├── calculator.py             CalculatorTool (AST 安全计算)
-│   │   ├── python_exec.py            PythonExecTool (subprocess 沙盒)
-│   │   └── http_request.py           HttpRequestTool (urllib)
-│   └── mcp/                          MCP 协议
-│       ├── client.py                 MCPClient (JSON-RPC 2.0 over stdio)
-│       └── bridge.py                 MCPTool (MCP → Tool 桥接)
-│
-├── agent/                            Agent 闭环训练 (Phase 14)
-│   ├── config.py                     AgentLoopConfig / TrainingStep / TrainingLog
-│   ├── teacher.py                    TeacherLLM (DashScope qwen3-max)
-│   ├── evaluator.py                  BenchmarkEvaluator (4维评测)
-│   ├── report.py                     BenchmarkReporter (Matplotlib 论文风格)
-│   └── loop.py                       AgentLoop (Teacher→Student 闭环)
-│
-├── api/                              用户接口
-│   ├── trainer.py                    NeuroStreamTrainer (研究者)
-│   ├── pipeline.py                   NeuroStreamPipeline (开发者)
-│   └── callbacks.py                  TrainerCallback 协议
-│
-└── utils/                            工具 (预留)
+Empty rate:       0.0%      ← 从不空回复
+Strict match:     0.0%      ← substring match 在开放问答上必然 0
+Char overlap:     13.8%     ← 含医学相关字符
+Bigram Jaccard:   1.1%      ← 短语级重合（不同医生措辞自由度大）
+Length ratio:     66.7%     ← 长度匹配
+```
 
-docs/                                 Markdown 文档集 (11 篇)
-├── index.md                          项目总览 + 快速开始
-├── quickstart.md                     5 分钟上手 (4 种场景)
-├── architecture.md                   系统架构 + 设计哲学
-└── api/                              API 参考 (8 篇)
-    ├── config.md                     NeuroStreamConfig 全参数
-    ├── types.md                      Memory / Modality / TierLevel
-    ├── encoder.md                    编码器体系
-    ├── memory.md                     记忆管理
-    ├── shadow.md                     影子权重
-    ├── forgetting.md                 抗灾难性遗忘
-    ├── runtime.md                    双进程运行时
-    └── pipeline.md                   Pipeline / Trainer / Callbacks
+实际生成示例（`training_log.json` 解码后）：
+```
+Q: 高血压 150/98，老公磁共振...
+A: 建议您来院就诊，带上所有资料。              ← 标准分诊建议
 
-tests/                                pytest 单元测试 (253 tests)
-├── test_types.py                     Memory / Modality / TierLevel
-├── test_config.py                    NeuroStreamConfig
-├── test_callbacks.py                 PrintCallback
-├── test_encoder_text.py              FeatureHashEncoder
-├── test_encoder_projection.py        ProjectedEncoder (via Mock)
-├── test_encoder_unified.py           UnifiedEncoder 注册/工厂
-├── test_encoder_sbert.py             SBERTEncoder (条件)
-├── test_memory_buffer.py             ShortTermBuffer 线程安全
-├── test_memory_index.py              FaissBackend
-├── test_memory_pool.py               MemoryPool 衰减/剪枝/持久化
-├── test_memory_tiered.py             Hot/Warm/Cold 分层逻辑
-├── test_consolidation.py             TimeIntegralStrategy
-├── test_shadow_projector.py          MemoryProjector
-├── test_shadow_objectives.py         ContrastiveLoss + RewardWeighted
-├── test_shadow_gradient.py           MemoryGradientComputer (3-tuple)
-├── test_shadow_manager.py            ShadowWeightManager
-├── test_forgetting.py                NoOp / EWC / Replay
-├── test_feedback.py                  反馈机制完整测试 (27 tests)
-├── test_transformer.py               Transformer Decoder 完整测试 (33 tests)
-├── test_tools.py                     工具系统完整测试 (48 tests)
-├── test_agent.py                     Agent 闭环完整测试 (49 tests)
-└── test_shadow_e2e.py                跨进程影子权重 E2E
+Q: 小儿关节弹响膜囊，下肢异常 5 天
+A: 您好，建议您先到医院检查一下，必要时做个膝关节 CT 检查。  ← 专业且对症
+
+Q: 关于肺癌
+A: 可以手术，但是不需要做，但是要看你的病情。  ← 合理临床判断
+```
+
+**结论**：模型已能产出合理医学回答，从初始 11.5 loss 降到 ~2.7 (ppl ~15)。
+strict_match=0% 是开放医学问答的本质局限（参考答案唯一），不代表模型差。
+
+### Windows 终端显示注意
+
+PowerShell 默认 GBK，看到的"口字码"只是字节渲染错位。看真实输出：
+```powershell
+chcp 65001  # 切 UTF-8
+# 或直接用 VSCode 打开 output/phase1_more/training_log.json
 ```
 
 ---
 
-## 三、Phase 完成状态
+## 三、本次冲刺修掉的关键 bug
 
-| Phase | 内容 | 状态 | 关键验证数据 |
-|-------|------|------|-------------|
-| 1 | 包结构 + 可插拔抽象层 | done | 所有 import 通过 |
-| 2 | 影子权重跨进程同步 | done | 33次push, 30次pull, weight_drift=0.056 |
-| 3 | 抗灾难性遗忘 (EWC+Replay) | done | EWC penalty + Replay 混合训练验证 |
-| 4 | Runtime 双进程编排 | done | Engine start/ingest/shutdown 生命周期 |
-| 5 | 用户 API | done | quickstart.py: 10文本→10记忆, 0报错 |
-| 6 | 分层记忆 Hot/Warm/Cold | done | 20记忆→Hot=10,Warm=10; 归档后Cold=5 |
-| 7 | 真实编码器集成 | done | ProjectedEncoder 维度适配 + pickle 往返 + 向后兼容 |
-| 8 | 单元测试覆盖 | done | 96 tests ALL PASSED in 2.69s, 覆盖 17 个模块 |
-| 9 | API 文档 (Markdown) | done | 11 篇文档: index + quickstart + 8 API 参考 + architecture |
-| 10 | GPU/CUDA 支持 | done | 自动设备检测, 13 个文件改动, 96 tests 全部通过 |
-| 11 | 反馈机制 | done | reward 加权搜索/训练, FeedbackProvider, 123 tests 全部通过 |
-| 12 | Transformer Decoder | done | 记忆增强 GPT-style 生成, ~32M params, 156 tests 全部通过 |
-| 13 | 工具系统 | done | Tool ABC + Registry + 3内置 + MCP Client, 204 tests 全部通过 |
-| 14 | Agent 闭环 | done | LLM Teacher 蒸馏 + 4维基准评测 + Matplotlib 报表, 253 tests 全部通过 |
+按发现顺序，每条都对应一个生产事故：
 
----
-
-## 四、核心技术实现细节
-
-### 4.1 影子权重同步协议
-- **MemoryProjector**: 残差 MLP (~65K 参数), zero-init → day-0 行为 = 恒等
-- **SharedWeightBuffer**: torch.share_memory_() 跨进程, 近乎无锁
-- **EMA Pull**: alpha=0.01, 约100次pull收敛, 行为平滑演化无突变
-- **训练目标**: InfoNCE 对比学习, 从记忆池高强度记忆构造正负对
-
-### 4.2 反馈机制 (Phase 11)
-- **Memory.reward**: [-1, 1] 评分, 0=无反馈, 正=好, 负=差
-- **Memory.correction**: 纠正内容 (错误记忆的正确版本)
-- **search() 融合 reward**: `wake_score = cosine + log(1+access_count) + reward_weight * reward`
-- **build_batch() 排序**: `score = intensity * max(0.1, 1 + reward)`, 高 reward 优先入训练 batch
-- **RewardWeightedContrastiveLoss**: InfoNCE + per-sample reward 加权, reward=-1 → weight=0.1 (抑制), reward=1 → weight=2 (强化)
-- **FeedbackProvider**: 可插拔策略 — LLMScorer (调 OpenAI 兼容 API 自动评分) + HumanFeedback (直接透传)
-- **EMA 更新**: `new_reward = 0.7 * old + 0.3 * score`, 平滑更新避免震荡
-- **反馈通道**: feedback_q → learning worker → 更新 Memory.reward
-
-### 4.3 筛选漏斗
-- 短期缓冲 → 时间积分 (S_t = S_{t-1} * decay + I_new) → 合并相似 → 剪枝弱记忆 → 固化
-- 唤醒权重 = 向量余弦相似度 + log(1 + access_count) + reward_weight * reward
-
-### 4.4 分层存储
-- Hot: FAISS IndexFlatIP, 内存, sub-ms, 容量上限
-- Warm: numpy 矩阵暴力搜索, 内存, ~ms
-- Cold: 磁盘 JSON, 全扫描, 仅在Hot+Warm不足时触发
-- 自动晋升(Warm→Hot) / 降级(Hot→Warm) / 归档(Warm→Cold)
-
-### 4.5 抗灾难性遗忘
-- EWC: 对角 Fisher 信息矩阵约束重要权重偏移
-- ExperienceReplay: 蓄水池采样旧记忆混入训练batch
-- 两者可通过配置切换, 或自定义 ForgettingStrategy
-
-### 4.6 预训练编码器集成
-- **ProjectedEncoder**: 维度适配基类, nn.Linear(native_dim, target_dim, bias=False) + L2 归一化
-- 当 native_dim == target_dim 时零开销 (无投射层)
-- orthogonal 初始化投射矩阵, 保持嵌入空间距离结构
-- **SBERTEncoder**: 包装 sentence-transformers, all-MiniLM-L6-v2 (384维) 等
-- **CLIPImageEncoder**: 包装 open_clip, ViT-B-32 (512维) 等, 接受 PIL.Image 或文件路径
-- **WhisperAudioEncoder**: 包装 openai-whisper, encoder hidden states mean-pool 为固定向量
-- 所有编码器: 懒加载 (首次 encode 时才加载模型) + __getstate__ pickle 安全 (Windows mp.spawn)
-- 工厂方法: `UnifiedEncoder.with_sbert()` / `.with_pretrained()` / `.full_multimodal()`
-- 可选依赖: `pip install neurostream[sbert]` / `[clip]` / `[whisper]` / `[pretrained]`
-
-### 4.7 工具系统 (Phase 13)
-- **Tool ABC**: 所有工具继承 — name/description/parameters/execute
-- **ToolResult**: output + success + error; **ToolCall**: name + arguments
-- **ToolRegistry**: register/get/execute 带超时保护 (ThreadPoolExecutor)
-- **CalculatorTool**: AST 白名单安全计算, 无 eval/exec, 支持 abs/sqrt/log/sin/cos/pi/e
-- **PythonExecTool**: subprocess 隔离执行 Python 代码, 带超时
-- **HttpRequestTool**: urllib GET/POST, 响应截断 4KB
-- **MCPClient**: JSON-RPC 2.0 over stdio, connect→initialize→tools/list→tools/call→disconnect
-- **MCPTool**: 将单个 MCP server 工具适配为 Tool 接口
-- **Tokenizer**: TOOL_CALL_ID=100261, TOOL_RESULT_ID=100262, decode 自动过滤
-- **generate()**: 检测 TOOL_CALL token → 继续采样工具名+参数 → 执行 → 注入 TOOL_RESULT + 结果 → 继续生成
-- **config**: tools_enabled=False (默认关闭), tool_timeout_sec=5.0, max_tool_calls_per_generation=5
-- **Engine**: call_tool() 显式调用, register_tool() 注册自定义, register_mcp() 连接 MCP server
-- **无新外部依赖**: urllib + subprocess + ast + concurrent.futures 均为标准库
-
-### 4.8 Agent 闭环训练 (Phase 14)
-- **TeacherLLM**: 封装 DashScope API (qwen3-max), generate/evaluate/generate_qa_pairs
-- **AgentLoop**: Teacher generate → Student generate → Teacher evaluate → feedback → ingest → train
-- **BenchmarkEvaluator**: 4维评测 — Knowledge QA / Math Reasoning / Tool Use / Memory Recall
-- **BenchmarkReporter**: Matplotlib 论文风格图表
-  - `render_table()`: 颜色编码对比表 (红→黄→绿), 蓝色表头, 加粗 Overall 行
-  - `render_training_curves()`: 双面板 — Teacher 评分曲线 + 各类别 Accuracy 进展
-  - `render_radar_chart()`: 极坐标多维能力可视化
-- **AgentLoopConfig**: API 配置 + 训练循环参数 + 评测参数
-- **TrainingLog**: 步骤记录 + 评测结果 + Engine 指标
-- **数据流**: Teacher 生成参考 → Student 尝试 → Teacher 评分 → Feedback 更新 reward → Ingest 注入记忆
-- **容错**: Student/Teacher 超时/异常自动降级, 评分 JSON 解析失败 → 默认 0 分
-- **依赖**: dashscope>=1.0, matplotlib>=3.5 (可选 `pip install neurostream[agent]`)
-
-### 4.9 Transformer Decoder (Phase 12)
-- **MemoryConditionedTransformer**: GPT-style causal decoder + memory cross-attention
-- **架构**: 每层 DecoderBlock = CausalSelfAttention + MemoryCrossAttention + FFN (pre-norm residual)
-- **记忆注入**: K/V 投射 memory_dim→d_model，每个 token 位置 attend 所有记忆
-- **Weight tying**: LM head 与 token embedding 共享权重
-- **默认规模**: 6 层 / 256 dim / 4 heads / 1024 FFN = ~32M params
-- **Tokenizer**: tiktoken cl100k_base (100K vocab), 支持中英文, BOS/EOS/PAD/SEP 特殊 token
-- **生成**: top-k + top-p + temperature 采样, greedy (temp=0) 确定性
-- **训练**: reward-weighted CE loss, query 位置 mask 为 -100
-- **ConversationBuffer**: deque 环形缓冲, reward 加权采样
-- **TransformerTrainer**: 类似 ShadowWeightManager 模式, AdamW (betas=0.9/0.95, wd=0.01)
-- **运行时集成**: generate_req_q/generate_resp_q 请求-响应, conversation_q 训练数据通道
-- **SharedWeightBuffer**: 同 MemoryProjector 模式, EMA pull (alpha=0.005)
-
-### 4.9 GPU/CUDA 支持
-- **设计原则**: 计算在 GPU，通信在 CPU — 模型 forward/backward 在 GPU，输出 `.detach().cpu()` 进入队列/记忆池
-- **NeuroStreamConfig**: `device="auto"` → `resolve_device()` 自动检测 CUDA
-- **MemoryProjector**: `__init__(device=...)`, forward 自动移动输入到模型设备
-- **SharedWeightBuffer**: 缓冲区始终 CPU (`share_memory_()` 要求), push 自动 GPU→CPU, pull 自动 CPU→GPU
-- **ShadowWeightManager**: shadow_model 在 GPU 训练, vectors/sim_matrix 自动迁移
-- **EWC/NoOp/Replay**: penalty 和 Fisher 张量跟随 model device
-- **ProjectedEncoder/SBERT/CLIP/Whisper**: 投射层和预训练模型在指定 device 上加载
-- **向后兼容**: 所有改动默认 CPU, 无 GPU 时零影响, 96 个现有测试全部通过
-
-### 4.11 单元测试
-- **21 个测试文件, 253 个测试用例**, 覆盖所有可独立测试的模块
-- 测试范围: types / config / encoder (text, projection, unified, sbert) / memory (buffer, index, pool, tiered) / consolidation / shadow (projector, objectives, gradient, manager) / forgetting (NoOp, EWC, Replay) / callbacks / feedback (base, human, llm_scorer, end-to-end)
-- Phase 11: test_feedback.py (27 tests) — reward / search / loss / FeedbackProvider / LLMScorer / E2E
-- Phase 12: test_transformer.py (33 tests) — tokenizer / model / causal masking / generation / training / weight sync
-- Phase 13: test_tools.py (48 tests) — Tool ABC / Calculator / PythonExec / HTTP / Registry / MCP mock / Tokenizer tokens / Generation / Config / E2E
-- Phase 14: test_agent.py (49 tests) — config / TeacherLLM (mock DashScope) / BenchmarkEvaluator / AgentLoop / BenchmarkReporter (Matplotlib) / imports
-- 线程安全测试: ShortTermBuffer 并发 push/flush (10线程×100条)
-- 确定性验证: FeatureHashEncoder 相同输入→相同向量
-- 梯度流验证: MemoryProjector + ContrastiveLoss + RewardWeightedContrastiveLoss + EWC penalty
-- multiprocessing 相关模块 (runtime workers, engine, pipeline, trainer) 由已有 E2E 测试覆盖
+| # | 现象 | 根因 | 修复位置 |
+|---|---|---|---|
+| 1 | `train.py` 在 `public` 分支看不到 `neurostream/` 源码 | `public` 是精简发布分支，不含源码 | 切到 `main` 分支开发 |
+| 2 | cross-attn 训练时见不到记忆（`memory_vectors=zeros(0,dim)`） | `engine.teach()` 没把 query_vec 传给 learning_worker | `engine.py:teach()` + `learning.py` conversation_q 消费段 |
+| 3 | 4000 ingests 只有 26-54 条进 pool | 主进程 push 完立刻 snapshot，learning_worker 没消化完队列 | `train.py:wait_drain()` |
+| 4 | `wait_drain` 卡 600s 不返回 | Windows `mp.Queue.qsize()` 子进程消费后不递减 | 只检查 `conversation_q`，不信 `memory_q` |
+| 5 | 92% 训练数据被静默丢弃 | `ConversationBuffer = deque(maxlen=5000)`，主进程 push 比 decoder 消费快 13x | `transformer/config.py` 加 `conversation_buffer_size=600000` |
+| 6 | `--epochs N` 实际只训 1/9 epoch | 主进程 push 完立刻退出，bonus 只 120s | `train.py:wait_drain()` 加 `train_min` 参数 |
+| 7 | eval 时 pool 5 分钟从 23K 崩到 23 条 | `decay_rate=0.01` × 300s 累积衰减 → 大批 intensity 跌破阈值被剪 | `train.py:build_config` decay_rate 0.01→0.001 |
+| 8 | snapshot 后 pool 一次性 179K→21 | `pool.decay()` 用 `dt = now - mem.timestamp`，snapshot 期间 dt 累积成数百秒，单次 decay 一口气把累积秒数全算 | `pool.py:decay()` 加 `max_dt=5` 钳制 + 显式 `dt=` 参数；`learning.py` 传 `dt=learning_interval_sec` |
+| 9 | inference 输出乱码（`reelsbutt narrator...`） | resume 时 decoder_state 只灌进 learning_worker 的 trainer，inference 端的 `self._decoder` 还是随机初始化；EMA α=0.005 太慢 | `engine.py:start()` 同步加载到 `self._decoder`；`inference.py` 加每 5s 主动 pull |
+| 10 | eval-only loss 假性掉到 0.04 | inference 把生成的 (query, AI回答) 推回 `conversation_q` 训练，模型在拟合自己的输出 | `inference.py:_handle_generate()` 移除 `conversation_q.put` + `memory_q.put` |
+| 11 | strict substring match 永远 0% | 开放医学问答只有一个参考答案 | `train.py:_score_one()` 加 char_overlap / bigram_jaccard / len_ratio / empty_rate |
 
 ---
 
-## 五、用户 API 示例
+## 四、单一训练入口（`train.py`）
 
-### 开发者 (5 行上手)
-```python
-from neurostream import NeuroStreamPipeline
+```bash
+# 持续学习（默认）
+python train.py
 
-with NeuroStreamPipeline(dim=128) as pipe:
-    pipe.ingest_many(["text1", "text2", "text3"])
-    pipe.wait(3.0)
-    pipe.shutdown(save_path="pool.json")
+# 从快照恢复继续训练 N 分钟
+python train.py --resume output/phase1/snapshot_final.pt --train-min 240
+
+# 只评估，不训练
+python train.py --resume output/phase1/snapshot_final.pt --eval-only
+
+# Phase 2 持续学习（要求 --resume）
+python train.py --resume output/phase1/snapshot_final.pt \
+                --phase2-data dataset/medical_phase2.json --output output/phase2
+
+# 蒸馏模式（委托给 AgentLoop，工作流之外用得少）
+python train.py --distill --api-key $env:DASHSCOPE_KEY
 ```
 
-### 研究者 (完全可控)
-```python
-from neurostream import NeuroStreamTrainer, NeuroStreamConfig, MemoryProjector
-from neurostream.forgetting import EWC
+主要参数（默认值）：
 
-config = NeuroStreamConfig(dim=128, shadow_ema_alpha=0.005, ewc_lambda=500.0)
-trainer = NeuroStreamTrainer(
-    config=config,
-    projector=MemoryProjector(dim=128, hidden=256),
-    forgetting_strategy=EWC(lambda_=500.0),
-)
-trainer.start()
-for entry in data_stream:
-    trainer.ingest(entry["text"])
-trainer.save_checkpoint("checkpoint.json")
-```
-
-### 自定义编码器
-```python
-from neurostream.encoder import EncoderBase, UnifiedEncoder
-
-class SBERTEncoder(EncoderBase):
-    dim = 384
-    modality = "text"
-    def encode(self, text): ...
-
-encoder = UnifiedEncoder(dim=384).register(SBERTEncoder())
-```
-
-### 预训练编码器 (一行切换)
-```python
-from neurostream import NeuroStreamPipeline
-
-# 零依赖默认 (FeatureHashEncoder)
-with NeuroStreamPipeline(dim=128) as pipe: ...
-
-# SBERT 语义编码
-from neurostream.encoder import UnifiedEncoder
-encoder = UnifiedEncoder.with_sbert(dim=128)
-# 传入 NeuroStreamTrainer 或 NeuroStreamEngine
-
-# 全模态 (text + image + audio)
-encoder = UnifiedEncoder.full_multimodal(dim=256)
-```
+| 参数 | 默认 | 说明 |
+|---|---|---|
+| `--memory-dim` | 128 | 记忆向量维度 |
+| `--d-model` | 512 | Transformer 维度 |
+| `--n-layers` | 12 | 层数 |
+| `--n-heads` | 8 | 注意力头数 |
+| `--d-ff` | 1366 | SwiGLU FFN（≈ d×8/3） |
+| `--seq-len` | 512 | 序列长度 |
+| `--lr` | 3e-4 | 学习率 |
+| `--batch-size` | 4 | micro batch |
+| `--grad-accum` | 8 | 累积步数（有效 batch=32） |
+| `--forgetting` | ewc | none / ewc / replay |
+| `--max-hours` | 23 | 最长总时间 |
+| `--snapshot-hours` | 2 | 快照间隔 |
+| `--epochs` | 1 | 数据 push 遍数（不是训练轮次） |
+| `--train-min` | 120 | push 完后让 decoder 继续训练的分钟数 |
+| `--eval-only` | False | 跳过训练只跑 eval |
+| `--eval-n` | 30 | eval 采样数 |
+| `--phase2-data` | None | Phase 2 数据集路径，要求 `--resume` |
 
 ---
 
-## 六、环境信息
+## 五、Phase 2 准备工作
 
-- Python: 3.11.2 (.venv)
-- PyTorch: 2.11.0 (CPU)
-- FAISS: 1.13.2 (CPU)
-- OS: Windows
-- 安装方式: `pip install -e .`
+### 数据集生成脚本：`prepare_phase2_data.py`
+
+```bash
+# 默认：50K EN + 200K ZH，与 phase 1 不重叠
+python prepare_phase2_data.py
+
+# 推荐做对照实验：纯英文 50K，测中文遗忘
+python prepare_phase2_data.py --target-en 50000 --target-zh 0 \
+  --output dataset/medical_phase2_en_only.json
+
+# 用更大的 6.5M 中文池
+python prepare_phase2_data.py --use-zh-extra
+```
+
+原始数据池容量（已验证）：
+
+| 来源 | 总量 | Phase 1 占用 | Phase 2 可用 |
+|---|---|---|---|
+| `Medical-Dialogue-Dataset-English.zip` | 181K | 74K | **107K** |
+| `MedDialog_processed.zip` 中文 | 2.44M | 165K | **2.27M** |
+| `Medical-Dialogue-Dataset-Chinese.zip` | ~6.5M | 部分 | 数百万 |
+
+去重保证：用 phase1 的 query MD5 哈希集合（242,503 个）filter 原始流。
 
 ---
 
-## 七、距离"可发布"的剩余工作
+## 六、运行约束
 
-| 项目 | 优先级 | 工作量 | 说明 |
-|------|--------|--------|------|
-| ~~GPU 支持~~ | ~~done~~ | ~~—~~ | ~~Phase 10 已完成~~ |
-| ~~反馈机制~~ | ~~done~~ | ~~—~~ | ~~Phase 11 已完成~~ |
-| ~~Transformer Decoder~~ | ~~done~~ | ~~—~~ | ~~Phase 12 已完成~~ |
-| ~~工具系统~~ | ~~done~~ | ~~—~~ | ~~Phase 13 已完成~~ |
-| ~~Agent 闭环~~ | ~~done~~ | ~~—~~ | ~~Phase 14 已完成~~ |
-| CI/CD + PyPI 发布 | P1 | 0.5天 | GitHub Actions |
-| REST API 层 | P1 | 1-2天 | FastAPI 封装 |
-| 分布式训练 | P2 | 2-3天 | 多 GPU / 多节点 |
+- GPU: RTX 5060 8GB（**注意：不是 Ti**，比之前以为的略弱）
+- 系统 RAM 无 ECC，长跑 >24h 可能死机 → `--max-hours` 默认 23h
+- ConversationBuffer 600K 条 ≈ 2.4GB CPU RAM
+- Memory pool 200K+ 条 ≈ 100MB CPU RAM (FAISS index)
+- 单 epoch 真实训练时间：理论 64 min，实测 4h 训了 1200 步 (~5%)，瓶颈在 learning_worker 大池 consolidate 周期
 
-**v0.6: Agent 闭环完成。支持 LLM Teacher 蒸馏训练 (DashScope qwen3-max) + 论文风格 Matplotlib 评测表。**
+---
+
+## 七、下一步路线
+
+1. **Phase 2 持续学习实验**（P0 — 立即可做）
+   ```bash
+   python prepare_phase2_data.py --target-en 50000 --target-zh 200000
+   python train.py --resume output/phase1_more/snapshot_final.pt \
+                   --phase2-data dataset/medical_phase2.json \
+                   --train-min 120 --output output/phase2
+   ```
+   关注点：phase 2 训完后用同一 eval 集衡量
+   - char_overlap 是否提升（说明持续学习有收益）
+   - 找回 phase1 val 集做"遗忘率"对比
+
+2. **预训练 backbone 接入**（P1，可选）
+   `Cloud-5090/checkpoint_latest.pt` 是 1.2B token 的双语 backbone（`no_cross_attn=True`）。
+   需要写权重迁移脚本：self-attn/FFN/embed → 新带 cross-attn 模型，cross-attn 层 zero-init。
+   预期能让 char_overlap 从 13.8% 跳到 25%+。
+
+3. **训练吞吐优化**（P1）
+   当前 4h 只训 1200 步，瓶颈在大 pool 的 consolidate/decay 周期。可选方案：
+   - `consolidate` 改为 batch 模式（一次处理 100 条而非 1 条）
+   - `decay` 跨多个 cycle 才执行一次
+   - 单独的 `MemoryPool` 操作进程
+
+4. **更靠谱的 eval**（P2）
+   - 接入 LLM-as-judge（DashScope）做语义评分
+   - 加 ROUGE-L / BLEU / 中文 BERTScore
+
+5. **REST API + 多 GPU**（P3，README Roadmap 已列）
+
+---
+
+## 八、`neurostream/` 包能力（核心，不变）
+
+| 模块 | 内容 |
+|---|---|
+| `types.py` | Memory / Modality / TierLevel |
+| `config.py` | `NeuroStreamConfig`（**新增 `decoder_buffer_size`**） |
+| `encoder/` | FeatureHash / SBERT / CLIP / Whisper / UnifiedEncoder |
+| `memory/pool.py` | **`decay()` 加显式 `dt` + `max_dt` 钳制** |
+| `consolidation/` | `TimeIntegralStrategy` |
+| `shadow/` | `MemoryProjector` / `SharedWeightBuffer` / `ShadowWeightManager` |
+| `forgetting/` | `EWC` / `ExperienceReplay` / `NoOpStrategy` |
+| `runtime/engine.py` | **`start()` 加载 decoder_state 到 inference 端** |
+| `runtime/learning.py` | **加 IDLE_DECAY_PAUSE_SEC + cycle-based decay 调用** |
+| `runtime/inference.py` | **5s 周期主动 pull decoder + 移除 generate→training 回灌** |
+| `transformer/config.py` | **新增 `conversation_buffer_size: int = 600_000`** |
+| `transformer/train.py` | **`ConversationBuffer` 用 config 的 `conversation_buffer_size`** |
+| `tools/` | Tool ABC + Calculator/PythonExec/HTTP + MCP |
+| `agent/` | `AgentLoop` + `TeacherLLM` + `BenchmarkEvaluator` + `BenchmarkReporter` |
+| `api/` | `NeuroStreamPipeline` / `NeuroStreamTrainer` |
+
+`train.py` 仅是这些能力的薄包装层，主要职责是配置 + 数据流转 + 报告。
+
+---
+
+## 九、分支策略
+
+- `main` — 完整源码（开发分支，当前在用）
+- `public` — 仅文档/配置（对外发布分支）
+- 工作流：在 main 干活，验证后 `git checkout public && git checkout main -- <files>`
+  把对外可见的文件选择性合并过去。
+
+**未提交变更**（截至 2026-05-09）：
+- `train.py`, `prepare_phase2_data.py`（新建）
+- `neurostream/runtime/engine.py`, `learning.py`, `inference.py`
+- `neurostream/memory/pool.py`
+- `neurostream/transformer/config.py`, `train.py`
+- `neurostream/config.py`
+- `PROGRESS.md`（本文件）
+
+建议在 phase 2 实验完成后一并 commit。
+
+---
+
+## 十、关键工件路径速查
+
+```
+dataset/
+  medical_cleaned.json         Phase 1 训练数据 (250K)
+  medical_phase2.json          [待生成] Phase 2 数据
+  medical_cleaned_meta.json    Phase 1 数据元信息
+
+output/
+  pilot/, pilot2/, pilot3/     冒烟测试历史
+  phase1/                      Phase 1 第一轮 (3785 steps)
+    snapshot_final.pt
+    training_log.json
+    scorecard.png
+  phase1_more/                 Phase 1 续训 (5000 steps, 当前最新)
+    snapshot_final.pt          ← 最新可用模型
+    training_log.json
+    scorecard.png
+  phase1_eval/                 Phase 1 第一次 eval-only (修复前，无效)
+  phase1_eval2/                Phase 1 第二次 eval-only (修复后)
+
+Cloud-5090/
+  checkpoint_latest.pt         1.2B token backbone（no_cross_attn）— 待迁移
+  training_log.json
+```

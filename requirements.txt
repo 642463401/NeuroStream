@@ -1,15 +1,63 @@
-# Core (inference / chat)
+# NeuroStream 依赖清单(v0.2.0 — 方案 A 持续学习训练 + 未来 OpenAI 兼容 API)
+#
+# 严格依赖定义在 pyproject.toml 的 [project.optional-dependencies],本文件
+# 是"一行装齐"的便利清单,等价于:
+#   pip install -e ".[decoder,agent,gpu,dev]" + ijson + fastapi/uvicorn/openai
+#
+# 用法:
+#   pip install -r requirements.txt
+#
+# 注意:torch 默认装的是 CPU 版,GPU 训练前必须先单独装 CUDA wheel。
+# 不同显卡架构需要不同 CUDA 版本:
+#   - RTX 30/40 系 (Ampere/Ada, sm_80-89)  → cu121 或 cu124 均可
+#   - RTX 50 系   (Blackwell,    sm_120)   → 必须 cu128(cu121 会报
+#                                            "no kernel image" 错误)
+# 安装命令(任选其一,匹配你的显卡):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128   # RTX 5060/5070/5080/5090
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124   # RTX 30/40 系
+# 然后再 pip install -r requirements.txt(已装的 torch 不会被覆盖)
+#
+# 验证 GPU 可用:
+#   python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_capability(0))"
+
+# ── 核心训练框架 ──────────────────────────────────────────
 torch>=2.0
+faiss-cpu>=1.7
+numpy>=1.24
+
+# ── Transformer 解码器 ───────────────────────────────────
 tiktoken>=0.5
 
-# API server (api_server.py)
-fastapi
-uvicorn[standard]
+# ── Agent 蒸馏 + 报表 ────────────────────────────────────
+dashscope>=1.0
+matplotlib>=3.5
 
-# Evaluation (eval_medical_qa.py)
-numpy
-matplotlib
-dashscope
-rouge-score
-sacrebleu
-bert-score
+# ── GPU 监控 ────────────────────────────────────────────
+pynvml>=11.5
+
+# ── 数据加载 ────────────────────────────────────────────
+# train.py:load_chinese_zip() 流式解析 2.4M 中文医学对话 zip
+ijson>=3.2
+
+# ── OpenAI 兼容 API 服务(roadmap)──────────────────────
+# 用于将训练好的模型以 OpenAI Chat Completions 格式对外提供推理服务,
+# 当前 v0.2.0 暂无 server 实现,但保留依赖避免未来重装环境。
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.0
+openai>=1.0          # 客户端侧,测试 /v1/chat/completions 兼容性
+
+# ── 测试 ────────────────────────────────────────────────
+pytest>=7.0
+
+# ── 可选(未默认启用)──────────────────────────────────
+# 多模态编码:取消注释以启用
+# sentence-transformers>=2.2     # SBERT 语义文本编码
+# open-clip-torch>=2.20          # CLIP 图像编码
+# Pillow>=9.0
+# openai-whisper>=20230918       # Whisper 音频编码
+#
+# 旧版评估指标(已被 train.py:_score_one 的软指标替代,保留以防需要):
+# rouge-score>=0.1               # ROUGE-L
+# sacrebleu>=2.3                 # BLEU
+# bert-score>=0.3                # BERTScore(中英文)

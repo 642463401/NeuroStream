@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroStream 学习路径合集</title>
+<style>
+:root {
+    --bg: #fdfdfc;
+    --fg: #2c2c2c;
+    --muted: #666;
+    --accent: #2563eb;
+    --code-bg: #f5f5f4;
+    --border: #e5e5e5;
+    --table-header: #f1f5f9;
+    --hover: #eef2ff;
+}
+* { box-sizing: border-box; }
+html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC",
+                 Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+}
+.container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+nav.sidebar {
+    background: #fafaf9;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1.2rem;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+nav.sidebar h2 {
+    font-size: 1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.8rem 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+nav.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+nav.sidebar li {
+    margin: 0.2rem 0;
+}
+nav.sidebar a {
+    color: var(--fg);
+    text-decoration: none;
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+nav.sidebar a:hover {
+    background: var(--hover);
+    color: var(--accent);
+}
+nav.sidebar a.h3 {
+    padding-left: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+nav.sidebar a.h2 {
+    font-weight: 600;
+    color: var(--fg);
+}
+main {
+    padding: 2.5rem 3rem;
+    max-width: 920px;
+    overflow-x: hidden;
+}
+.doc-section {
+    padding-bottom: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid var(--border);
+}
+.doc-section:last-child { border-bottom: none; }
+h1 {
+    font-size: 2.2rem;
+    margin: 0 0 1rem 0;
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.5rem;
+}
+h2 {
+    font-size: 1.7rem;
+    margin: 2.5rem 0 1rem 0;
+    color: #1e3a8a;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
+}
+h3 {
+    font-size: 1.3rem;
+    margin: 1.8rem 0 0.8rem 0;
+    color: #1e40af;
+}
+h4 {
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.6rem 0;
+    color: #374151;
+}
+p { margin: 0.8rem 0; }
+strong { color: #111; }
+em { color: #555; }
+a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+a:hover {
+    border-bottom-style: solid;
+}
+code {
+    font-family: "JetBrains Mono", "Cascadia Code", Consolas,
+                 "Source Code Pro", monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: #be185d;
+}
+pre {
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    line-height: 1.5;
+    font-size: 0.88em;
+    margin: 1rem 0;
+}
+pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+}
+table {
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    width: 100%;
+    font-size: 0.92em;
+}
+table th, table td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+}
+table th {
+    background: var(--table-header);
+    font-weight: 600;
+    color: #1e3a8a;
+}
+table tr:nth-child(even) td {
+    background: #fafaf9;
+}
+blockquote {
+    border-left: 4px solid var(--accent);
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    background: #eff6ff;
+    color: #1e3a8a;
+}
+ul, ol {
+    padding-left: 1.5rem;
+}
+li { margin: 0.3rem 0; }
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+.top-bar {
+    background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+    color: #fff;
+    padding: 1.2rem 3rem;
+    grid-column: 1 / -1;
+}
+.top-bar h1 {
+    color: #fff;
+    border: none;
+    padding: 0;
+    margin: 0 0 0.3rem 0;
+    font-size: 1.6rem;
+}
+.top-bar p {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+/* 打印样式 */
+@media print {
+    .container { grid-template-columns: 1fr; }
+    nav.sidebar { display: none; }
+    main { padding: 1rem; max-width: 100%; }
+    .top-bar { padding: 0.5rem 1rem; }
+    pre { font-size: 0.75em; page-break-inside: avoid; }
+    table { font-size: 0.8em; page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+}
+/* 响应式 */
+@media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; }
+    nav.sidebar { display: none; }
+    main { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="top-bar">
+<h1>NeuroStream 学习路径合集</h1>
+<p>知识地图 · 系统性 AI 理论 · 项目专项教材 — 三合一阅读视图</p>
+</div>
+<nav class="sidebar">
+<h2>目录</h2>
+<a class="h2" href="#section-00_knowledge_map">知识地图</a>
+<ul>
+<li><a class="h2" href="#section-00_knowledge_map-两份教材怎么配合">两份教材怎么配合</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-完整知识依赖图">完整知识依赖图</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-13-个模块速查">13 个模块速查</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-三阶段路径预估-3-4-个月每周-10-15h">三阶段路径(预估 3-4 个月,每周 10-15h)</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-学习节奏建议">学习节奏建议</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-每日">每日</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-每周">每周</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-每月">每月</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-阶段验收里程碑">阶段验收(里程碑)</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-主资源池b-站">主资源池(B 站)</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-必看任何路径都不能跳">必看(任何路径都不能跳)</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-单项进阶">单项进阶</a></li>
+<li><a class="h3" href="#section-00_knowledge_map-论文精读在-b-站找精讲再去读原文">论文精读(在 B 站找精讲再去读原文)</a></li>
+<li><a class="h2" href="#section-00_knowledge_map-下一步">下一步</a></li>
+</ul>
+<a class="h2" href="#section-01_systematic">系统性学习</a>
+<ul>
+<li><a class="h2" href="#section-01_systematic-1-线性代数与张量">§1 线性代数与张量</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题自测">关键问题(自测)</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-2-微积分与反向传播">§2 微积分与反向传播</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-3-概率与信息论">§3 概率与信息论</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-4-神经网络构件">§4 神经网络构件</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-5-训练循环与优化">§5 训练循环与优化</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-10-个概念">必须搞懂的 10 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-6-词元化与语言建模">§6 词元化与语言建模</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-7-transformer-架构">§7 Transformer 架构</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-12-个概念">必须搞懂的 12 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题这层每题都要会">关键问题(这层每题都要会)</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源必看">B 站资源(必看)</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-8-自回归生成">§8 自回归生成</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-9-对比学习与表征">§9 对比学习与表征</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-10-向量检索与记忆系统">§10 向量检索与记忆系统</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-11-持续学习与抗灾难性遗忘">§11 持续学习与抗灾难性遗忘</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-12-多进程异步训练系统">§12 多进程异步训练系统</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-13-agent--工具系统">§13 Agent / 工具系统</a></li>
+<li><a class="h3" href="#section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</a></li>
+<li><a class="h3" href="#section-01_systematic-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-01_systematic-b-站资源">B 站资源</a></li>
+<li><a class="h3" href="#section-01_systematic-验收">验收</a></li>
+<li><a class="h2" href="#section-01_systematic-跨章节自测清单">跨章节自测清单</a></li>
+</ul>
+<a class="h2" href="#section-02_project_codex">NeuroStream 专项教材</a>
+<ul>
+<li><a class="h2" href="#section-02_project_codex-1-数据结构与配置">§1 数据结构与配置</a></li>
+<li><a class="h3" href="#section-02_project_codex-11-memory--记忆的最小单位">1.1 Memory —— 记忆的最小单位</a></li>
+<li><a class="h3" href="#section-02_project_codex-12-neurostreamconfig--30-超参数集中地">1.2 NeuroStreamConfig —— 30+ 超参数集中地</a></li>
+<li><a class="h3" href="#section-02_project_codex-自测">自测</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-2-编码器体系">§2 编码器体系</a></li>
+<li><a class="h3" href="#section-02_project_codex-设计精髓">设计精髓</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-3-记忆池与分层存储">§3 记忆池与分层存储</a></li>
+<li><a class="h3" href="#section-02_project_codex-数据流">数据流</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键代码">关键代码</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-4-影子权重核心差异化">§4 影子权重(核心差异化)</a></li>
+<li><a class="h3" href="#section-02_project_codex-41-memoryprojector--残差-mlp--zero-init必读-50-行">4.1 MemoryProjector —— 残差 MLP + Zero-Init(必读 50 行)</a></li>
+<li><a class="h3" href="#section-02_project_codex-42-infonce-对比学习">4.2 InfoNCE 对比学习</a></li>
+<li><a class="h3" href="#section-02_project_codex-43-跨进程同步-sharedweightbuffer">4.3 跨进程同步 SharedWeightBuffer</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题每题都要会">关键问题(每题都要会)</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-5-memory-conditioned-transformer">§5 Memory-Conditioned Transformer</a></li>
+<li><a class="h3" href="#section-02_project_codex-51-modelpy-结构总览">5.1 model.py 结构总览</a></li>
+<li><a class="h3" href="#section-02_project_codex-52-单层-decoderblock-数据流">5.2 单层 DecoderBlock 数据流</a></li>
+<li><a class="h3" href="#section-02_project_codex-53-rope-关键代码">5.3 RoPE 关键代码</a></li>
+<li><a class="h3" href="#section-02_project_codex-54-训练-trainpytrainstep">5.4 训练 train.py:train_step</a></li>
+<li><a class="h3" href="#section-02_project_codex-55-evaluate2026-05-新增早停用">5.5 evaluate(2026-05 新增,早停用)</a></li>
+<li><a class="h3" href="#section-02_project_codex-56-生成-generatepy">5.6 生成 generate.py</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题共-10-题">关键问题(共 10 题)</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-6-持续学习与抗遗忘">§6 持续学习与抗遗忘</a></li>
+<li><a class="h3" href="#section-02_project_codex-61-ewc-数学">6.1 EWC 数学</a></li>
+<li><a class="h3" href="#section-02_project_codex-62-关键代码">6.2 关键代码</a></li>
+<li><a class="h3" href="#section-02_project_codex-63-experience-replay-蓄水池采样">6.3 Experience Replay 蓄水池采样</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-7-双进程运行时">§7 双进程运行时</a></li>
+<li><a class="h3" href="#section-02_project_codex-71-进程拓扑">7.1 进程拓扑</a></li>
+<li><a class="h3" href="#section-02_project_codex-72-八条-queue每条都是契约">7.2 八条 Queue(每条都是契约)</a></li>
+<li><a class="h3" href="#section-02_project_codex-73-学习进程主循环learningpy">7.3 学习进程主循环(learning.py)</a></li>
+<li><a class="h3" href="#section-02_project_codex-74-必须知道的几个坑全在-progressmd-里">7.4 必须知道的几个"坑"(全在 PROGRESS.md 里)</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题共-8-题">关键问题(共 8 题)</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-8-训练入口-trainpy">§8 训练入口 train.py</a></li>
+<li><a class="h3" href="#section-02_project_codex-81-流程图">8.1 流程图</a></li>
+<li><a class="h3" href="#section-02_project_codex-82-关键参数2026-05-早停改造后">8.2 关键参数(2026-05 早停改造后)</a></li>
+<li><a class="h3" href="#section-02_project_codex-83-早停停止判定trainuntilstop">8.3 早停停止判定(train_until_stop)</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-9-agent--工具系统-可选">§9 Agent / 工具系统 (可选)</a></li>
+<li><a class="h3" href="#section-02_project_codex-91-tool-调用流程">9.1 Tool 调用流程</a></li>
+<li><a class="h3" href="#section-02_project_codex-92-mcp-协议">9.2 MCP 协议</a></li>
+<li><a class="h3" href="#section-02_project_codex-93-蒸馏-agentloop">9.3 蒸馏 AgentLoop</a></li>
+<li><a class="h3" href="#section-02_project_codex-关键问题">关键问题</a></li>
+<li><a class="h3" href="#section-02_project_codex-实操">实操</a></li>
+<li><a class="h2" href="#section-02_project_codex-通关检验">通关检验</a></li>
+<li><a class="h2" href="#section-02_project_codex-推荐配套阅读顺序">推荐配套阅读顺序</a></li>
+</ul>
+</nav>
+<main>
+<div class="doc-section" id="section-00_knowledge_map">
+<h1>NeuroStream 知识地图</h1>
+<blockquote>
+<p>整套学习路径的"目录页"。看完这一页就知道:学什么、按什么顺序学、什么时候去看 <a href="#section-01_systematic">01_systematic.md</a> 还是 <a href="#section-02_project_codex">02_project_codex.md</a>。</p>
+</blockquote>
+<hr />
+<h2 id="section-00_knowledge_map-两份教材怎么配合">两份教材怎么配合</h2>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│   01_systematic.md  ←─  通用理论(B 站 + 论文)              │
+│                          学完能去任何 AI 项目工作            │
+│                                                              │
+│              ↕  互相印证                                    │
+│                                                              │
+│   02_project_codex.md  ←─  对着 NeuroStream 代码精讲         │
+│                              学完能完全掌控本项目            │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<p><strong>推荐用法</strong>:学一个 systematic 模块,立刻打开对应的 codex 章节看项目里怎么落地。理论 + 代码同时进入大脑,远比单读快。</p>
+<hr />
+<h2 id="section-00_knowledge_map-完整知识依赖图">完整知识依赖图</h2>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>                          ┌─────────────────────────┐
+                          │     L0  数学基础         │
+                          │  线代 · 微积分 · 概率    │
+                          └────────────┬────────────┘
+                                       │
+                          ┌────────────▼────────────┐
+                          │   L1  神经网络基础       │
+                          │  MLP · 反向传播 · 优化器 │
+                          └─────┬───────────────────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              ▼                 ▼                 ▼
+        ┌──────────┐     ┌──────────┐     ┌──────────┐
+        │  L2 序列  │    │ L2 训练  │     │ L2 表征  │
+        │   建模    │    │   工程   │     │   学习   │
+        │ Token/LM │     │ AdamW/   │     │ Contrast │
+        │  Causal  │    │ fp16/EMA │     │  InfoNCE │
+        └────┬─────┘     └────┬─────┘     └────┬─────┘
+             │                │                │
+             └────────┬───────┴────────┬───────┘
+                      ▼                ▼
+            ┌──────────────────┐  ┌──────────────────┐
+            │  L3 Transformer  │  │  L3 持续学习      │
+            │  Self-Attn / FFN │  │  EWC / Replay    │
+            │  RoPE / RMSNorm  │  │  Catastrophic    │
+            │  Multi-Head      │  │  Forgetting      │
+            └────────┬─────────┘  └─────────┬────────┘
+                     │                      │
+                     │   ┌──────────────┐   │
+                     ├──▶│ L3 向量检索  │◀──┤
+                     │   │ FAISS / ANN  │   │
+                     │   │ Cosine Sim   │   │
+                     │   └──────┬───────┘   │
+                     │          │           │
+                     └──────────┼───────────┘
+                                ▼
+                  ┌──────────────────────────────┐
+                  │      L4  NeuroStream 整合     │
+                  │  双进程 · 影子权重 · 边推边学  │
+                  │  生物隐喻 · Memory + 参数协同 │
+                  └──────────────┬───────────────┘
+                                 │
+                  ┌──────────────▼───────────────┐
+                  │  L5 Agent / 工具系统 (可选)   │
+                  │  Tool Use · MCP · 蒸馏        │
+                  └──────────────────────────────┘
+</code></pre></div>
+
+<hr />
+<h2 id="section-00_knowledge_map-13-个模块速查">13 个模块速查</h2>
+<p>每个模块的详细内容见 <a href="#section-01_systematic">01_systematic.md</a>;每个模块对应的项目代码精讲见 <a href="#section-02_project_codex">02_project_codex.md</a>。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>层级</th>
+<th>模块</th>
+<th>系统理论</th>
+<th>项目代码</th>
+<th>难度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>L0</td>
+<td>线性代数与张量</td>
+<td>系-§1</td>
+<td>代-§1 (<code>types.py</code>)</td>
+<td>★☆☆</td>
+</tr>
+<tr>
+<td>2</td>
+<td>L0</td>
+<td>微积分与反向传播</td>
+<td>系-§2</td>
+<td>—</td>
+<td>★★☆</td>
+</tr>
+<tr>
+<td>3</td>
+<td>L0</td>
+<td>概率与信息论</td>
+<td>系-§3</td>
+<td>代-§5 (<code>train.py:loss</code>)</td>
+<td>★★☆</td>
+</tr>
+<tr>
+<td>4</td>
+<td>L1</td>
+<td>神经网络构件</td>
+<td>系-§4</td>
+<td>代-§4 (<code>shadow/projector.py</code>)</td>
+<td>★★☆</td>
+</tr>
+<tr>
+<td>5</td>
+<td>L1</td>
+<td>训练循环与优化</td>
+<td>系-§5</td>
+<td>代-§5 (<code>transformer/train.py</code>)</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>6</td>
+<td>L2</td>
+<td>词元化与语言建模</td>
+<td>系-§6</td>
+<td>代-§5 (<code>tokenizer.py</code>)</td>
+<td>★★☆</td>
+</tr>
+<tr>
+<td>7</td>
+<td>L3</td>
+<td>Transformer 架构</td>
+<td>系-§7</td>
+<td>代-§5 (<code>transformer/model.py</code>)</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>8</td>
+<td>L3</td>
+<td>自回归生成</td>
+<td>系-§8</td>
+<td>代-§5 (<code>transformer/generate.py</code>)</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>9</td>
+<td>L3</td>
+<td>对比学习</td>
+<td>系-§9</td>
+<td>代-§4 (<code>shadow/objectives.py</code>)</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>10</td>
+<td>L3</td>
+<td>向量检索与记忆</td>
+<td>系-§10</td>
+<td>代-§3 (<code>memory/</code>)</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>11</td>
+<td>L3</td>
+<td>持续学习与抗遗忘</td>
+<td>系-§11</td>
+<td>代-§6 (<code>forgetting/</code>)</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>12</td>
+<td>L4</td>
+<td>多进程异步系统</td>
+<td>系-§12</td>
+<td>代-§7 (<code>runtime/</code>)</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>13</td>
+<td>L5</td>
+<td>Agent / 工具(可选)</td>
+<td>系-§13</td>
+<td>代-§9 (<code>agent/</code>, <code>tools/</code>)</td>
+<td>★★★</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="section-00_knowledge_map-三阶段路径预估-3-4-个月每周-10-15h">三阶段路径(预估 3-4 个月,每周 10-15h)</h2>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Week  1  2  3  4  5  6  7  8  9  10 11 12 13 14
+       ├──A──┤├──────B──────┤├──────C──────┤├D┤
+
+A (3w):  数学补漏 + 神经网络基础(L0 + L1)
+         → 看 3Blue1Brown,跑通项目 5 行 demo
+
+B (5w):  Transformer + 训练工程(L2 + L3 主干)
+         → 看 Karpathy「Let&#39;s build GPT」+ 沐神 Transformer 精读
+         → 读 transformer/model.py 全文
+
+C (5w):  NeuroStream 差异化(L3 检索/持续学习/对比 + L4 双进程)
+         → 读 forgetting/ + shadow/ + memory/ + runtime/
+         → 自己改一个小特性,重训
+
+D (1w):  Agent / 工具系统(可选)
+         → 如果计划接入 OpenAI 兼容 API,加这层
+</code></pre></div>
+
+<hr />
+<h2 id="section-00_knowledge_map-学习节奏建议">学习节奏建议</h2>
+<h3 id="section-00_knowledge_map-每日">每日</h3>
+<ul>
+<li>30 分钟视频(B 站,1.5 倍速)</li>
+<li>30 分钟读项目代码(对照笔记标记)</li>
+<li>30 分钟自己复现一个小片段(纸上或代码)</li>
+</ul>
+<h3 id="section-00_knowledge_map-每周">每周</h3>
+<ul>
+<li>周末把本周所学整合一篇笔记(标记到 <a href="#section-01_systematic">01_systematic.md</a> 对应章节末)</li>
+<li>一个"自测问题"(在 <a href="#section-01_systematic">01_systematic.md</a> 每章末的"自测清单"里挑一个,写出完整答案)</li>
+</ul>
+<h3 id="section-00_knowledge_map-每月">每月</h3>
+<ul>
+<li>跑一次完整训练(<code>python train.py</code>)</li>
+<li>修改一个小参数(如 <code>decoder_dropout</code>),观察 val_loss 变化</li>
+<li>用纸把整个数据流(从 <code>engine.ingest</code> 到 <code>decoder_trainer.train_step</code>)画出来</li>
+</ul>
+<hr />
+<h2 id="section-00_knowledge_map-阶段验收里程碑">阶段验收(里程碑)</h2>
+<table>
+<thead>
+<tr>
+<th>阶段末</th>
+<th>你应该能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A 末(第 3 周)</td>
+<td>解释 <code>shadow/projector.py</code> 全部 50 行代码,讲清"残差 MLP 为何 zero-init"</td>
+</tr>
+<tr>
+<td>B 末(第 8 周)</td>
+<td>不看代码画出 <code>MemoryConditionedTransformer</code> 单层的数据流(self-attn / cross-attn / FFN)</td>
+</tr>
+<tr>
+<td>C 末(第 13 周)</td>
+<td>给陌生人讲清"NeuroStream 与 RAG 的本质区别在哪三层"</td>
+</tr>
+<tr>
+<td>D 末(第 14 周)</td>
+<td>给项目加一个 OpenAI 兼容 <code>/v1/chat/completions</code> API</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="section-00_knowledge_map-主资源池b-站">主资源池(B 站)</h2>
+<blockquote>
+<p>给关键词,自己用 B 站搜索框搜出最新版本。BV 号有时会失效,UP 主名 + 课程名是最稳的。</p>
+</blockquote>
+<h3 id="section-00_knowledge_map-必看任何路径都不能跳">必看(任何路径都不能跳)</h3>
+<table>
+<thead>
+<tr>
+<th>UP 主 / 频道</th>
+<th>关键词</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3Blue1Brown 中文官方</strong></td>
+<td>线性代数的本质 / 神经网络</td>
+<td>数学直觉</td>
+</tr>
+<tr>
+<td><strong>跟李沐学AI</strong></td>
+<td>动手学深度学习 / 论文精读</td>
+<td>系统课 + 论文精讲</td>
+</tr>
+<tr>
+<td><strong>Andrej Karpathy 中文搬运</strong></td>
+<td>Let's build GPT / makemore / tokenizer</td>
+<td>手搓代码</td>
+</tr>
+<tr>
+<td><strong>跟李宏毅老师学</strong></td>
+<td>2024 机器学习 / 生成式 AI</td>
+<td>通俗讲解(适合复盘)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-00_knowledge_map-单项进阶">单项进阶</h3>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>推荐 UP 主 / 搜索词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transformer 论文精读</td>
+<td>「跟李沐学AI」Transformer / Attention Is All You Need</td>
+</tr>
+<tr>
+<td>GPT / BERT 系列</td>
+<td>「跟李沐学AI」GPT 1/2/3 精读 / BERT 精读</td>
+</tr>
+<tr>
+<td>持续学习 EWC</td>
+<td>搜「弹性权重固化 EWC」/「灾难性遗忘」</td>
+</tr>
+<tr>
+<td>对比学习 InfoNCE</td>
+<td>「跟李沐学AI」SimCLR / MoCo / CLIP 精读</td>
+</tr>
+<tr>
+<td>向量检索 FAISS</td>
+<td>搜「FAISS 原理」/「ANN 近似最近邻」</td>
+</tr>
+<tr>
+<td>RoPE 旋转位置编码</td>
+<td>搜「RoPE 苏剑林」/「旋转位置编码」</td>
+</tr>
+<tr>
+<td>SwiGLU / RMSNorm</td>
+<td>搜「LLaMA 架构详解」</td>
+</tr>
+<tr>
+<td>多进程 PyTorch</td>
+<td>搜「PyTorch DDP」/「multiprocessing share_memory」</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-00_knowledge_map-论文精读在-b-站找精讲再去读原文">论文精读(在 B 站找精讲再去读原文)</h3>
+<table>
+<thead>
+<tr>
+<th>论文</th>
+<th>重要程度</th>
+<th>项目对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attention Is All You Need (2017)</td>
+<td>★★★★★</td>
+<td><code>transformer/model.py</code></td>
+</tr>
+<tr>
+<td>GPT-2 / GPT-3 论文</td>
+<td>★★★★</td>
+<td>整体架构</td>
+</tr>
+<tr>
+<td>LLaMA / LLaMA-2</td>
+<td>★★★★</td>
+<td>RoPE + SwiGLU + RMSNorm</td>
+</tr>
+<tr>
+<td>RoFormer (RoPE)</td>
+<td>★★★★</td>
+<td><code>transformer/model.py</code> 位置编码</td>
+</tr>
+<tr>
+<td>EWC (Kirkpatrick 2017)</td>
+<td>★★★</td>
+<td><code>forgetting/ewc.py</code></td>
+</tr>
+<tr>
+<td>SimCLR / InfoNCE (CPC)</td>
+<td>★★★</td>
+<td><code>shadow/objectives.py</code></td>
+</tr>
+<tr>
+<td>CLIP (2021)</td>
+<td>★★★</td>
+<td><code>encoder/image.py</code></td>
+</tr>
+<tr>
+<td>FAISS (2017)</td>
+<td>★★</td>
+<td><code>memory/pool.py</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="section-00_knowledge_map-下一步">下一步</h2>
+<p>打开 <a href="#section-01_systematic">01_systematic.md</a> 从 §1 开始。或者如果手头宽松,直接跳到 <a href="#section-02_project_codex">02_project_codex.md</a> 的 §1(读 <code>types.py</code>),看不懂的概念再回 systematic 查。</p>
+<p>两份文档双向链接,可以随意跳。</p>
+</div>
+<div class="doc-section" id="section-01_systematic">
+<h1>系统性学习:AI / 深度学习 / Transformer</h1>
+<blockquote>
+<p>本文档是通用 AI 知识体系。每个 § 学完,去 <a href="#section-02_project_codex">02_project_codex.md</a> 对应章节看 NeuroStream 怎么落地。
+B 站资源给的是 <strong>UP 主名 + 搜索关键词</strong>,不给 BV 号(易失效)。在 B 站搜索框输入即可。</p>
+</blockquote>
+<p><strong>导航</strong>:<a href="#1-线性代数与张量">§1</a> · <a href="#2-微积分与反向传播">§2</a> · <a href="#3-概率与信息论">§3</a> · <a href="#4-神经网络构件">§4</a> · <a href="#5-训练循环与优化">§5</a> · <a href="#6-词元化与语言建模">§6</a> · <a href="#7-transformer-架构">§7</a> · <a href="#8-自回归生成">§8</a> · <a href="#9-对比学习与表征">§9</a> · <a href="#10-向量检索与记忆系统">§10</a> · <a href="#11-持续学习与抗灾难性遗忘">§11</a> · <a href="#12-多进程异步训练系统">§12</a> · <a href="#13-agent--工具系统">§13</a></p>
+<hr />
+<h2 id="section-01_systematic-1-线性代数与张量">§1 线性代数与张量</h2>
+<p><strong>为什么这是地基</strong>:Transformer 的 attention 公式 <code>softmax(QK^T/√d)V</code> 就是矩阵乘法;模型参数都是张量;每个 <code>.shape</code> 都涉及维度推理。看不懂矩阵乘法 = 看不懂任何深度学习代码。</p>
+<h3 id="section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</h3>
+<ol>
+<li><strong>向量</strong> — 数列,有方向 + 大小</li>
+<li><strong>点积</strong>(dot product)— <code>a·b = Σ aᵢbᵢ</code>,衡量两向量"对齐度"</li>
+<li><strong>余弦相似度</strong> — <code>cos(a,b) = a·b / (|a||b|)</code>,归一化后的点积,值域 [-1, 1]</li>
+<li><strong>矩阵乘法</strong> — <code>(M×K) @ (K×N) = (M×N)</code>,K 必须对齐</li>
+<li><strong>L2 范数</strong> — <code>|x| = √Σxᵢ²</code>,向量"长度"</li>
+<li><strong>张量</strong>(Tensor)— 多维数组,PyTorch 核心数据结构</li>
+<li><strong>广播</strong>(broadcasting)— 形状不同时如何"自动"对齐</li>
+<li><strong><code>einsum</code></strong> — 通用张量收缩,看懂 attention 的关键</li>
+</ol>
+<h3 id="section-01_systematic-关键问题自测">关键问题(自测)</h3>
+<ul>
+<li>为什么 attention 公式里要除以 <code>√d_k</code>?</li>
+<li>L2 归一化后,点积和余弦相似度的关系是?</li>
+<li><code>tensor.shape = (B, T, V)</code> 这三个维度分别是什么?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>3Blue1Brown 中文官方</strong> — 搜「线性代数的本质」(15 集,精华前 7 集,4 小时)</li>
+<li><strong>跟李沐学AI</strong> — 搜「数据操作 数据预处理」(d2l 教程前几集)</li>
+<li><strong>小破站</strong> — 搜「PyTorch 张量」(入门视频很多,挑一个 1h 内的)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>打开 PyTorch shell,不查文档完成:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>x <span style="color: #666">=</span> torch<span style="color: #666">.</span>randn(<span style="color: #40A070">4</span>, <span style="color: #40A070">8</span>, <span style="color: #40A070">16</span>)   <span style="color: #60A0B0; font-style: italic"># (B=4, T=8, D=16)</span>
+y <span style="color: #666">=</span> torch<span style="color: #666">.</span>randn(<span style="color: #40A070">16</span>, <span style="color: #40A070">32</span>)
+z <span style="color: #666">=</span> x <span style="color: #666">@</span> y                    <span style="color: #60A0B0; font-style: italic"># z.shape = ?  → (4, 8, 32)</span>
+</code></pre></div>
+
+<p>能解释最后一步怎么算出来的。</p>
+<hr />
+<h2 id="section-01_systematic-2-微积分与反向传播">§2 微积分与反向传播</h2>
+<p><strong>为什么重要</strong>:训练就是"求梯度 → 更新参数"。<code>loss.backward()</code> 一行背后是整张计算图的链式法则。</p>
+<h3 id="section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</h3>
+<ol>
+<li><strong>导数</strong> — 函数变化率</li>
+<li><strong>偏导数</strong> — 多元函数对单个变量的导数</li>
+<li><strong>梯度</strong>(gradient)— 所有偏导组成的向量,<strong>指向最快上升方向</strong></li>
+<li><strong>链式法则</strong> — <code>(f∘g)'(x) = f'(g(x))·g'(x)</code>,反向传播的数学基础</li>
+<li><strong>计算图</strong>(computation graph)— 张量操作组成的 DAG</li>
+<li><strong>自动微分</strong>(autograd)— PyTorch 自动构建计算图 + 反向求梯度</li>
+<li><strong>梯度爆炸 / 消失</strong> — 深网络中的两大经典问题,引出 ResNet / LayerNorm</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li><code>loss.backward()</code> 之后,参数是如何被更新的?</li>
+<li>为什么要做梯度裁剪(<code>clip_grad_norm_</code>)?</li>
+<li><code>with torch.no_grad():</code> 块里做的操作,梯度还会被记录吗?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>3Blue1Brown 中文官方</strong> — 搜「微积分的本质」(可选,只看前 4 集即可)</li>
+<li><strong>3Blue1Brown 中文官方</strong> — 搜「神经网络」第 3 集"反向传播的本质"(<strong>必看</strong>)</li>
+<li><strong>Andrej Karpathy 中文搬运</strong> — 搜「Zero to Hero micrograd」(<strong>手搓 autograd,2 小时,神课</strong>)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>能在纸上画出 <code>y = (x + 2) * 3 → loss = y²</code> 的计算图,并手算 <code>dloss/dx</code>。</p>
+<hr />
+<h2 id="section-01_systematic-3-概率与信息论">§3 概率与信息论</h2>
+<p><strong>为什么重要</strong>:语言模型输出是概率分布(softmax);损失函数是交叉熵;<code>perplexity = exp(loss)</code>。</p>
+<h3 id="section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</h3>
+<ol>
+<li><strong>softmax</strong> — 把任意实数向量映射到概率分布:<code>softmax(x)ᵢ = eˣⁱ / Σ eˣʲ</code></li>
+<li><strong>概率分布</strong> — 一组非负数,和为 1</li>
+<li><strong>熵</strong>(entropy)— <code>H(p) = -Σ p log p</code>,分布的"不确定度"</li>
+<li><strong>交叉熵</strong>(cross-entropy)— <code>H(p,q) = -Σ p log q</code>,衡量用 q 表示 p 的代价</li>
+<li><strong>KL 散度</strong> — <code>KL(p||q) = H(p,q) - H(p)</code>,两分布的"距离"(非对称)</li>
+<li><strong>最大似然估计</strong>(MLE)— 选参数使观测数据概率最大,等价于最小化交叉熵</li>
+<li><strong>Perplexity</strong> — <code>ppl = exp(cross_entropy)</code>,语言模型评估标配,"平均不确定 token 数"</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>训练日志显示 <code>val_loss=2.16, ppl=8.7</code>,两个数的关系是?</li>
+<li>为什么分类任务用交叉熵而不是 MSE?</li>
+<li><code>label_smoothing=0.1</code> 在数学上做了什么?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>跟李沐学AI</strong> — 搜「softmax 回归」(d2l 课)</li>
+<li><strong>跟李沐学AI</strong> — 搜「信息论 交叉熵」</li>
+<li>搜「KL 散度 通俗讲解」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>不看公式手算:<code>p = [0.7, 0.2, 0.1]</code>,真实标签是 0,交叉熵损失 = ?(答:<code>-log(0.7) ≈ 0.357</code>)</p>
+<hr />
+<h2 id="section-01_systematic-4-神经网络构件">§4 神经网络构件</h2>
+<p><strong>为什么重要</strong>:Transformer 是堆出来的乐高,先认识每个积木块。</p>
+<h3 id="section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</h3>
+<ol>
+<li><strong>全连接层 <code>nn.Linear(in, out)</code></strong> — 矩阵乘 + 偏置:<code>y = xW + b</code></li>
+<li><strong>激活函数</strong>:ReLU / GELU / <strong>SwiGLU</strong>(NeuroStream 用)</li>
+<li><strong>MLP</strong>(多层感知机)— Linear + 激活 + Linear,FFN 的本体</li>
+<li><strong>残差连接</strong>(residual)— <code>y = x + F(x)</code>,<strong>让深网络可训</strong></li>
+<li><strong>归一化</strong>:BatchNorm / LayerNorm / <strong>RMSNorm</strong>(NeuroStream 用)</li>
+<li><strong>Dropout</strong> — 训练时随机置零,防过拟合</li>
+<li><strong>Embedding 层</strong> — <code>nn.Embedding(vocab, dim)</code>,把 token id 映射到向量</li>
+<li><strong>参数初始化</strong> — Xavier / Kaiming / <strong>zero-init</strong>(NeuroStream 影子权重用)</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>为什么残差连接 <code>y = x + F(x)</code> 让深网络可训?(梯度直通)</li>
+<li>LayerNorm 和 BatchNorm 区别?为什么 Transformer 用前者?</li>
+<li>SwiGLU 比 GELU 强在哪?(门控机制)</li>
+<li>"zero-init 最后一层"意味着初始模型在做什么?(恒等映射)</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>跟李沐学AI</strong> — 搜「多层感知机 d2l」</li>
+<li><strong>跟李沐学AI</strong> — 搜「批量归一化」(讲清楚 BN vs LN)</li>
+<li>搜「SwiGLU 激活函数」</li>
+<li>搜「RMSNorm LLaMA」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>读懂 <code>neurostream/shadow/projector.py</code> 全部 50 行,讲清:
+- <code>Linear → GELU → Linear</code> 的形状变换
+- 为什么最后一层 zero-init</p>
+<hr />
+<h2 id="section-01_systematic-5-训练循环与优化">§5 训练循环与优化</h2>
+<p><strong>为什么重要</strong>:<code>loss.backward() + optimizer.step()</code> 之外,还有 10 个工程实践决定能不能训出来。</p>
+<h3 id="section-01_systematic-必须搞懂的-10-个概念">必须搞懂的 10 个概念</h3>
+<ol>
+<li><strong>SGD</strong> — 最基础,<code>θ ← θ - lr·∇L</code></li>
+<li><strong>Momentum</strong> — 加"惯性",抗震荡</li>
+<li><strong>Adam / AdamW</strong> — 自适应学习率 + 解耦权重衰减(<strong>项目默认</strong>)</li>
+<li><strong>学习率调度</strong>:warmup + cosine decay(项目用的组合)</li>
+<li><strong>梯度累积</strong>(grad accumulation)— 小显存模拟大 batch:<code>batch=4, accum=8</code> ≈ <code>batch=32</code></li>
+<li><strong>混合精度训练</strong>(fp16 + GradScaler)— 显存减半 + 速度提升</li>
+<li><strong>梯度裁剪</strong> — <code>clip_grad_norm_(params, max_norm=1.0)</code> 防爆炸</li>
+<li><strong>权重衰减</strong>(weight decay)— L2 正则的另一种表述</li>
+<li><strong>Label smoothing</strong> — 让 one-hot 标签变软,提高泛化</li>
+<li><strong>EMA</strong>(指数滑动平均)— <code>θ_ema ← (1-α)·θ_ema + α·θ</code>,<strong>项目影子权重的核心</strong></li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>为什么有 warmup?(开始时梯度不稳)</li>
+<li><code>batch_size=4, grad_accum=8</code>,实际等效 batch 是?optimizer 每多少次 forward 才 step 一次?</li>
+<li>fp16 训练为什么需要 GradScaler?</li>
+<li>AdamW 比 Adam 改进在哪?(weight decay 实现位置)</li>
+<li>EMA 的 α=0.01 意味着多少步才能"完全收敛"到新值?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>跟李沐学AI</strong> — 搜「优化算法 d2l」(Adam / AdamW 系列)</li>
+<li><strong>跟李沐学AI</strong> — 搜「混合精度训练」</li>
+<li>搜「学习率 warmup cosine」</li>
+<li>搜「梯度累积 显存」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>能讲清 <code>transformer/train.py:train_step</code> 函数里:
+- <code>accum_loop</code> 为什么除以 <code>accum_steps</code>
+- <code>scaler.unscale_ → clip_grad_norm_ → scaler.step</code> 这三步顺序为什么不能换</p>
+<hr />
+<h2 id="section-01_systematic-6-词元化与语言建模">§6 词元化与语言建模</h2>
+<p><strong>为什么重要</strong>:模型不认字,只认 token id。tokenization 决定模型能看多远、词表多大、参数多冗余。</p>
+<h3 id="section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</h3>
+<ol>
+<li><strong>Tokenizer</strong>:把字符串 → token id 序列</li>
+<li><strong>词表</strong>(vocabulary)— 全部可识别 token,NeuroStream 用 tiktoken cl100k_base 的 <strong>100,277 词表</strong></li>
+<li><strong>BPE</strong>(Byte-Pair Encoding)— 把高频字节对合并成新 token,平衡词表大小 / 序列长度</li>
+<li><strong>特殊 token</strong>:BOS(begin)/ EOS(end)/ PAD / SEP</li>
+<li><strong>因果语言建模</strong>(Causal LM)— 给定前 n 个 token 预测第 n+1 个,<code>P(xₙ₊₁ | x₁..ₙ)</code></li>
+<li><strong>Teacher Forcing</strong> — 训练时用真实 token 作为下一步输入(而非模型自己生成的)</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>BPE 和 char-level / word-level 分词各有什么优劣?</li>
+<li>中文在 tiktoken 里是如何被切分的?(字节级 BPE)</li>
+<li>Teacher forcing 训练 vs 自回归推理,行为为什么不同?(exposure bias)</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>Andrej Karpathy 中文搬运</strong> — 搜「Let's build the GPT Tokenizer」(<strong>2 小时,神课</strong>)</li>
+<li><strong>跟李沐学AI</strong> — 搜「seq2seq」(理解 LM 训练 paradigm)</li>
+<li>搜「BPE 算法」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>在 Python shell 里跑:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">tiktoken</span>
+enc <span style="color: #666">=</span> tiktoken<span style="color: #666">.</span>get_encoding(<span style="color: #4070A0">&quot;cl100k_base&quot;</span>)
+<span style="color: #007020">print</span>(enc<span style="color: #666">.</span>encode(<span style="color: #4070A0">&quot;Hello 你好&quot;</span>))  <span style="color: #60A0B0; font-style: italic"># 看看怎么切</span>
+</code></pre></div>
+
+<p>能解释为什么"你好"被切成 6 个 token(中文字节级)。</p>
+<hr />
+<h2 id="section-01_systematic-7-transformer-架构">§7 Transformer 架构</h2>
+<p><strong>这是项目最核心理论</strong>。NeuroStream 的 <code>MemoryConditionedTransformer</code> 就是 GPT + 多一层 cross-attention。</p>
+<h3 id="section-01_systematic-必须搞懂的-12-个概念">必须搞懂的 12 个概念</h3>
+<ol>
+<li><strong>Self-Attention</strong> — <code>Attention(Q,K,V) = softmax(QK^T/√d)V</code></li>
+<li><strong>Q / K / V 的角色</strong> — Query 问、Key 答、Value 取</li>
+<li><strong>多头注意力</strong>(Multi-Head)— 并行多套 Q/K/V,捕捉不同关系</li>
+<li><strong>因果掩码</strong>(Causal Mask)— 上三角 -inf,确保位置 i 看不到 i+1</li>
+<li><strong>位置编码</strong>:
+   - Absolute(Vaswani 原版,sin/cos)
+   - Learned(GPT-2)
+   - <strong>RoPE</strong>(旋转位置编码,NeuroStream + LLaMA 用)</li>
+<li><strong>FFN</strong> — Linear → 激活 → Linear,通常 <code>4d</code> 隐藏维(SwiGLU 用 <code>≈ 8d/3</code> 保参数量)</li>
+<li><strong>LayerNorm 位置</strong>:Pre-LN(<code>x + Attn(LN(x))</code>)vs Post-LN(原版,难训)</li>
+<li><strong>残差连接</strong>:每个 sublayer 都要 <code>x + sublayer(x)</code></li>
+<li><strong>KV cache</strong>:推理时缓存历史 K/V,避免重复计算</li>
+<li><strong>Cross-Attention</strong>:Q 来自 decoder,K/V 来自外部(NeuroStream 来自记忆)</li>
+<li><strong>Encoder-Decoder vs Decoder-Only</strong>:T5 vs GPT</li>
+<li><strong>梯度检查点</strong>(gradient checkpointing)— 用计算换显存</li>
+</ol>
+<h3 id="section-01_systematic-关键问题这层每题都要会">关键问题(这层每题都要会)</h3>
+<ul>
+<li>为什么 <code>QK^T / √d_k</code>?(防 softmax 饱和)</li>
+<li>多头注意力的"头"在做什么?如果只用 1 头会怎样?</li>
+<li>为什么 decoder 需要因果掩码,encoder 不需要?</li>
+<li>RoPE 怎么把位置信息编码进 attention?(在 Q/K 上旋转)</li>
+<li>Pre-LN 为什么比 Post-LN 好训?</li>
+<li><code>MemoryCrossAttention</code> 与 <code>CausalSelfAttention</code> 三层不同点?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源必看">B 站资源(必看)</h3>
+<ul>
+<li><strong>跟李沐学AI</strong> — 搜「Transformer 论文逐段精读」(<strong>必看,2 小时</strong>)</li>
+<li><strong>Andrej Karpathy 中文搬运</strong> — 搜「Let's build GPT from scratch」(<strong>手搓 GPT,3 小时,神课</strong>)</li>
+<li><strong>跟李沐学AI</strong> — 搜「Attention is all you need」</li>
+<li><strong>跟李宏毅老师学</strong> — 搜「李宏毅 Transformer」(直觉解释)</li>
+<li>搜「RoPE 旋转位置编码 苏剑林」(中文最佳讲解)</li>
+<li>搜「LLaMA 架构详解」(SwiGLU / RMSNorm / RoPE 一站搞定)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>不看代码,在纸上画出一个 Transformer block 的内部数据流(Pre-LN 版),标出每个张量的 <code>(B, T, D)</code> 维度。</p>
+<hr />
+<h2 id="section-01_systematic-8-自回归生成">§8 自回归生成</h2>
+<p><strong>Transformer 训练好后,怎么"说话"</strong>。</p>
+<h3 id="section-01_systematic-必须搞懂的-7-个概念">必须搞懂的 7 个概念</h3>
+<ol>
+<li><strong>Greedy</strong> — 每步选概率最大的 token,确定性 + 无趣</li>
+<li><strong>Temperature</strong> — softmax 前除以 T,T 越小越尖锐,T→0 = greedy</li>
+<li><strong>Top-k 采样</strong> — 只在 top-k 候选里采样</li>
+<li><strong>Top-p / nucleus 采样</strong> — 累积概率到 p 为止</li>
+<li><strong>Beam search</strong> — 维护 k 个候选,适合翻译,<strong>不适合开放生成</strong></li>
+<li><strong>Repetition penalty</strong> — 惩罚已出现 token</li>
+<li><strong>KV cache</strong> — 缓存历史 K/V,加速生成</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>temperature=0.5 和 temperature=2.0 行为差异?</li>
+<li>top-k=40 与 top-p=0.9 同时设置,先做哪个?</li>
+<li>为什么对话模型不用 beam search?</li>
+<li>KV cache 节省了什么计算?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li>搜「LLM 文本生成 采样」</li>
+<li>搜「HuggingFace generate 函数」</li>
+<li><strong>跟李沐学AI</strong> — 搜「束搜索」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>讲清 <code>transformer/generate.py</code> 里 <code>temperature → top_k → top_p</code> 三步采样的顺序与各自作用。</p>
+<hr />
+<h2 id="section-01_systematic-9-对比学习与表征">§9 对比学习与表征</h2>
+<p><strong>为什么重要</strong>:NeuroStream 的影子权重训练是 InfoNCE 对比学习。不懂这层,看不懂 <code>shadow/objectives.py</code>。</p>
+<h3 id="section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</h3>
+<ol>
+<li><strong>表征学习</strong>(representation learning)— 学到一个"好用"的向量空间</li>
+<li><strong>对比学习</strong> — 让相似样本靠近、不相似的远离,<strong>无需显式标签</strong></li>
+<li><strong>InfoNCE 损失</strong> — <code>L = -log[exp(sim(q,k+)/τ) / Σ exp(sim(q,k)/τ)]</code></li>
+<li><strong>温度 τ</strong> — 控制"困难度",τ 小越严苛</li>
+<li><strong>L2 归一化 + 余弦相似度</strong> — 对比学习的标配组合</li>
+<li><strong>SimCLR / MoCo / CLIP</strong>(代表方法)</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>InfoNCE 与交叉熵的关系?(本质都是交叉熵)</li>
+<li>为什么 InfoNCE 训练需要 L2 归一化?</li>
+<li>温度 τ=0.07 vs τ=1.0 行为差别?</li>
+<li>Reward-weighted InfoNCE 怎么把 reward 接进 loss?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li><strong>跟李沐学AI</strong> — 搜「SimCLR 论文精读」</li>
+<li><strong>跟李沐学AI</strong> — 搜「MoCo 论文精读」</li>
+<li><strong>跟李沐学AI</strong> — 搜「CLIP 论文精读」</li>
+<li>搜「对比学习 InfoNCE」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>读懂 <code>shadow/objectives.py:ContrastiveLoss</code>,讲清:
+- batch 内哪些被当正样本、哪些是负样本
+- <code>MemoryGradientComputer</code> 如何构造对比对</p>
+<hr />
+<h2 id="section-01_systematic-10-向量检索与记忆系统">§10 向量检索与记忆系统</h2>
+<p><strong>NeuroStream 的"记忆池"就是带衰减/合并/分层的向量数据库</strong>。</p>
+<h3 id="section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</h3>
+<ol>
+<li><strong>向量数据库</strong>:把"语义相似"变成"几何近邻"</li>
+<li><strong>精确最近邻</strong>(brute force)vs <strong>近似最近邻</strong>(ANN)</li>
+<li><strong>FAISS</strong> — Facebook 开源的 ANN 库,<strong>项目用 FlatL2 / IVF</strong></li>
+<li><strong>索引算法</strong>:HNSW(图)/ IVF(倒排)/ PQ(乘积量化)</li>
+<li><strong>检索打分</strong>:<code>score = cos(q, k) + log(1 + access_count)</code>(项目里"越用越强")</li>
+<li><strong>时间衰减</strong> — <code>intensity *= exp(-decay_rate * dt)</code>,模拟遗忘</li>
+<li><strong>分层存储</strong>:Hot / Warm / Cold(类比 CPU cache)</li>
+<li><strong>RAG vs 参数化记忆</strong>(NeuroStream 是后者,<strong>核心差异化</strong>)</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>RAG 和 NeuroStream 影子权重的"知识注入"在哪里不同?</li>
+<li>FAISS <code>IndexFlatL2</code> 和 <code>IndexIVFFlat</code> 时间复杂度对比?</li>
+<li>为什么记忆要分 Hot/Warm/Cold,而不是一个大池子?</li>
+<li><code>pool.decay(dt=5)</code> 加 <code>max_dt</code> 钳制是为了防什么?(PROGRESS bug #8)</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li>搜「FAISS 向量检索」</li>
+<li>搜「ANN 近似最近邻」</li>
+<li>搜「HNSW 算法」(进阶)</li>
+<li>搜「RAG 检索增强生成」(对照学习)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>跑一个最小 FAISS demo:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">faiss</span><span style="color: #666">,</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">numpy</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">as</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">np</span>
+idx <span style="color: #666">=</span> faiss<span style="color: #666">.</span>IndexFlatL2(<span style="color: #40A070">128</span>)
+idx<span style="color: #666">.</span>add(np<span style="color: #666">.</span>random<span style="color: #666">.</span>randn(<span style="color: #40A070">1000</span>, <span style="color: #40A070">128</span>)<span style="color: #666">.</span>astype(<span style="color: #4070A0">&#39;float32&#39;</span>))
+D, I <span style="color: #666">=</span> idx<span style="color: #666">.</span>search(np<span style="color: #666">.</span>random<span style="color: #666">.</span>randn(<span style="color: #40A070">5</span>, <span style="color: #40A070">128</span>)<span style="color: #666">.</span>astype(<span style="color: #4070A0">&#39;float32&#39;</span>), k<span style="color: #666">=</span><span style="color: #40A070">10</span>)
+</code></pre></div>
+
+<p>能解释 D / I 各代表什么。</p>
+<hr />
+<h2 id="section-01_systematic-11-持续学习与抗灾难性遗忘">§11 持续学习与抗灾难性遗忘</h2>
+<p><strong>NeuroStream 的核心目标之一</strong>:边推理边学习,不能学新忘旧。</p>
+<h3 id="section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</h3>
+<ol>
+<li><strong>灾难性遗忘</strong>(Catastrophic Forgetting)— 学新任务时把旧任务能力丢光</li>
+<li><strong>EWC</strong>(Elastic Weight Consolidation)— 用 Fisher 信息矩阵保护重要参数
+   - <code>L_total = L_new + λ·Σ Fᵢ·(θᵢ - θ*ᵢ)²</code></li>
+<li><strong>Fisher 信息矩阵</strong> — 衡量参数对似然的敏感度(对角近似)</li>
+<li><strong>Experience Replay</strong> — 蓄水池采样旧数据混入训练</li>
+<li><strong>蓄水池采样</strong>(Reservoir Sampling)— 流式数据中均匀采样 k 个,O(n) 时间 / O(k) 空间</li>
+<li><strong>概念漂移</strong>(Concept Drift)— 数据分布随时间变化</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>EWC 中 λ 太大 / 太小各会怎样?</li>
+<li>Fisher 信息矩阵为什么用对角近似?(全矩阵太大,n×n)</li>
+<li>蓄水池采样的核心算法是什么?(第 i 个元素以 k/i 概率保留)</li>
+<li>Phase 2 持续学习实验要观察什么指标?(遗忘率 + 新任务收益)</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li>搜「灾难性遗忘 EWC」</li>
+<li>搜「持续学习 Continual Learning」</li>
+<li>搜「Fisher 信息」(数学背景)</li>
+<li><strong>跟李沐学AI</strong> — 搜「持续学习」(可能有,搜搜看)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>读懂 <code>forgetting/ewc.py</code>,讲清:
+- <code>_compute_fisher</code> 怎么算 Fisher 信息
+- <code>penalty</code> 函数里那个二次项的物理含义</p>
+<hr />
+<h2 id="section-01_systematic-12-多进程异步训练系统">§12 多进程异步训练系统</h2>
+<p><strong>NeuroStream 的工程核心</strong>:推理学习分离,跨进程权重同步。</p>
+<h3 id="section-01_systematic-必须搞懂的-8-个概念">必须搞懂的 8 个概念</h3>
+<ol>
+<li><strong>进程 vs 线程</strong> — Python GIL,CPU-bound 必须用多进程</li>
+<li><strong><code>multiprocessing</code> <code>spawn</code> vs <code>fork</code></strong> — Windows 只有 spawn,序列化成本更高</li>
+<li><strong>进程间通信</strong>:Queue / Pipe / Shared Memory</li>
+<li><strong>PyTorch <code>torch.share_memory_()</code></strong> — 把张量放共享内存,跨进程零拷贝读</li>
+<li><strong>Producer-Consumer 模式</strong>:推理是生产者(memory),学习是消费者</li>
+<li><strong>毒丸模式</strong>(poison pill)— 用 <code>None</code> 通知 worker 退出</li>
+<li><strong>EMA 跨进程同步</strong> — 学习进程 push 新权重,推理进程 EMA pull</li>
+<li><strong>死锁陷阱</strong>:队列满了 put 阻塞、qsize() 在 Windows 不可靠等</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>为什么 <code>mp.set_start_method("spawn")</code>?(Linux 默认 fork 更快,Windows 没 fork)</li>
+<li><code>share_memory_</code> 后多个进程写同一张量会怎样?(竞态)</li>
+<li>EMA α=0.005 vs α=0.05,推理端权重多久能追上学习端?</li>
+<li>Windows 上 <code>mp.Queue.qsize()</code> 为什么不可靠?(PROGRESS bug #4)</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li>搜「Python 多进程 multiprocessing」</li>
+<li>搜「PyTorch 多 GPU DDP」(进阶但有参考价值)</li>
+<li>搜「共享内存 Python」</li>
+<li>搜「Producer Consumer 模式」</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>读懂 <code>runtime/engine.py</code> 的 <code>start()</code> 和 <code>runtime/learning.py</code> 的主循环,在纸上画出 6 个 Queue 的数据流向。</p>
+<hr />
+<h2 id="section-01_systematic-13-agent--工具系统">§13 Agent / 工具系统</h2>
+<p><strong>NeuroStream 已实现</strong>,但 Phase 1/2 暂不依赖。打算上 OpenAI 兼容 API 时再深入。</p>
+<h3 id="section-01_systematic-必须搞懂的-6-个概念">必须搞懂的 6 个概念</h3>
+<ol>
+<li><strong>Tool Use / Function Calling</strong> — LLM 输出"调用 X 工具,参数 Y",外部执行后回灌</li>
+<li><strong>MCP</strong>(Model Context Protocol)— Anthropic 提出的工具协议,JSON-RPC 2.0</li>
+<li><strong>LLM 蒸馏</strong>(Distillation)— Teacher LLM(大,慢)生成数据训练 Student(小,快)</li>
+<li><strong>基准评估</strong>(Benchmark)— 4 维(准确/相关/完整/流畅)等</li>
+<li><strong>LLM-as-Judge</strong> — 让 LLM 给 LLM 打分</li>
+<li><strong>强化学习反馈</strong>(RLHF / DPO)— 用 reward 信号继续训(NeuroStream 用简化版 reward-weighted)</li>
+</ol>
+<h3 id="section-01_systematic-关键问题">关键问题</h3>
+<ul>
+<li>Tool use 是怎么在 token 流里"被发现"的?(特殊标记 + 解析)</li>
+<li>MCP 协议为什么用 JSON-RPC 而非 REST?(stdio + 流式)</li>
+<li>蒸馏与 RAG 的区别?</li>
+<li>LLM-as-judge 的偏见问题?</li>
+</ul>
+<h3 id="section-01_systematic-b-站资源">B 站资源</h3>
+<ul>
+<li>搜「Function Calling LLM」</li>
+<li>搜「MCP Model Context Protocol」(较新)</li>
+<li>搜「RLHF」(关注 OpenAI / Anthropic 风格教程)</li>
+<li><strong>跟李沐学AI</strong> — 搜「InstructGPT」(RLHF 经典)</li>
+</ul>
+<h3 id="section-01_systematic-验收">验收</h3>
+<p>读懂 <code>tools/base.py:Tool</code> ABC 和 <code>agent/teacher.py:TeacherLLM</code>,讲清"蒸馏流程"完整一轮的数据走向。</p>
+<hr />
+<h2 id="section-01_systematic-跨章节自测清单">跨章节自测清单</h2>
+<p>学完所有 §,这些问题你都该秒答:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>问题</th>
+<th>涉及 §</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>val_loss=2.16, ppl=8.7</code> 的关系?</td>
+<td>§3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>残差 MLP zero-init 后初始行为是什么?</td>
+<td>§4</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>batch=4, grad_accum=8, lr=3e-4</code> 实际等效 batch 是多少?</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>4</td>
+<td>tiktoken cl100k_base 词表大小?</td>
+<td>§6</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>softmax(QK^T/√d)V</code> 每个符号的含义和形状?</td>
+<td>§7</td>
+</tr>
+<tr>
+<td>6</td>
+<td>top-k=40 + top-p=0.9 + temp=0.5 三者顺序?</td>
+<td>§8</td>
+</tr>
+<tr>
+<td>7</td>
+<td>InfoNCE 损失公式?</td>
+<td>§9</td>
+</tr>
+<tr>
+<td>8</td>
+<td>FAISS <code>IndexFlatL2</code> 时间复杂度?</td>
+<td>§10</td>
+</tr>
+<tr>
+<td>9</td>
+<td>EWC penalty 公式?</td>
+<td>§11</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>mp.set_start_method("spawn", force=True)</code> 在 Windows 为什么必要?</td>
+<td>§12</td>
+</tr>
+<tr>
+<td>11</td>
+<td>MCP 协议底层用什么?</td>
+<td>§13</td>
+</tr>
+<tr>
+<td>12</td>
+<td>NeuroStream 与 RAG 的三层本质差异?</td>
+<td>§10+§12</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>下一步</strong>:打开 <a href="#section-02_project_codex">02_project_codex.md</a>,按"读代码顺序"系统看一遍 NeuroStream。</p>
+</div>
+<div class="doc-section" id="section-02_project_codex">
+<h1>NeuroStream 专项教材</h1>
+<blockquote>
+<p>按"读代码顺序"组织。每章贴关键代码 + 设计意图 + 自测问题 + 实操练习。
+看不懂某个概念,跳到 <a href="#section-01_systematic">01_systematic.md</a> 对应 § 补理论。</p>
+</blockquote>
+<p><strong>导航</strong>:<a href="#1-数据结构与配置">§1 数据结构</a> · <a href="#2-编码器体系">§2 编码器</a> · <a href="#3-记忆池与分层存储">§3 记忆池</a> · <a href="#4-影子权重核心差异化">§4 影子权重</a> · <a href="#5-memory-conditioned-transformer">§5 Transformer</a> · <a href="#6-持续学习与抗遗忘">§6 持续学习</a> · <a href="#7-双进程运行时">§7 双进程运行时</a> · <a href="#8-训练入口-trainpy">§8 训练入口</a> · <a href="#9-agent--工具系统-可选">§9 Agent 与工具</a></p>
+<hr />
+<h2 id="section-02_project_codex-1-数据结构与配置">§1 数据结构与配置</h2>
+<p><strong>关联系统理论</strong>:无(纯工程)</p>
+<h3 id="section-02_project_codex-11-memory--记忆的最小单位">1.1 <code>Memory</code> —— 记忆的最小单位</h3>
+<p>文件:<code>neurostream/types.py</code></p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #555; font-weight: bold">@dataclass</span>
+<span style="color: #007020; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">Memory</span>:
+    vector: Tensor                    <span style="color: #60A0B0; font-style: italic"># 概念向量</span>
+    modality: Modality <span style="color: #666">=</span> TEXT         <span style="color: #60A0B0; font-style: italic"># 模态(text/image/audio)</span>
+    intensity: <span style="color: #007020">float</span> <span style="color: #666">=</span> <span style="color: #40A070">1.0</span>            <span style="color: #60A0B0; font-style: italic"># 强度,随时间衰减</span>
+    timestamp: <span style="color: #007020">float</span> <span style="color: #666">=</span> <span style="color: #666">...</span>            <span style="color: #60A0B0; font-style: italic"># 创建时间</span>
+    access_count: <span style="color: #007020">int</span> <span style="color: #666">=</span> <span style="color: #40A070">0</span>             <span style="color: #60A0B0; font-style: italic"># 被检索次数(影响重要性)</span>
+    tier: TierLevel <span style="color: #666">=</span> HOT             <span style="color: #60A0B0; font-style: italic"># 当前分层(Hot/Warm/Cold)</span>
+    reward: <span style="color: #007020">float</span> <span style="color: #666">=</span> <span style="color: #40A070">0.0</span>               <span style="color: #60A0B0; font-style: italic"># 反馈评分 [-1, 1]</span>
+    correction: Optional[<span style="color: #007020">str</span>] <span style="color: #666">=</span> <span style="color: #007020; font-weight: bold">None</span>  <span style="color: #60A0B0; font-style: italic"># 错误时的正确版本</span>
+</code></pre></div>
+
+<p><strong>设计精髓</strong>:<code>Memory</code> 不是 "RAG chunk",<strong>它是一等公民</strong>。整个项目的数据结构都围绕 <code>List[Memory]</code> 展开。理解这点比看任何代码更重要。</p>
+<h3 id="section-02_project_codex-12-neurostreamconfig--30-超参数集中地">1.2 <code>NeuroStreamConfig</code> —— 30+ 超参数集中地</h3>
+<p>文件:<code>neurostream/config.py</code></p>
+<p>按功能分组:记忆 / 影子权重 / 抗遗忘 / 反馈 / Transformer decoder / 工具。每个字段都有默认值。</p>
+<h3 id="section-02_project_codex-自测">自测</h3>
+<ol>
+<li><code>Memory.reward</code> 字段从 [-1, 1],它在哪里被读取并影响训练?(提示:<code>shadow/objectives.py</code> 和 <code>transformer/train.py</code>)</li>
+<li><code>TierLevel</code> 三层为什么是 Hot/Warm/Cold 不是 Hot/Cold 两层?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<p>打开 IPython:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> Memory, Modality
+<span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">torch</span>
+m <span style="color: #666">=</span> Memory(vector<span style="color: #666">=</span>torch<span style="color: #666">.</span>randn(<span style="color: #40A070">128</span>), modality<span style="color: #666">=</span>Modality<span style="color: #666">.</span>TEXT, intensity<span style="color: #666">=</span><span style="color: #40A070">0.8</span>)
+<span style="color: #007020">print</span>(m)
+</code></pre></div>
+
+<hr />
+<h2 id="section-02_project_codex-2-编码器体系">§2 编码器体系</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">01_systematic.md §1</a> + <a href="#section-01_systematic">§13</a></p>
+<p>文件:
+- <code>neurostream/encoder/base.py</code> — <code>EncoderBase</code> ABC
+- <code>neurostream/encoder/text.py</code> — <strong><code>FeatureHashEncoder</code>(零依赖,从这看起)</strong>
+- <code>neurostream/encoder/sbert.py</code> — SBERT 语义编码
+- <code>neurostream/encoder/image.py</code> — CLIP 图像
+- <code>neurostream/encoder/audio.py</code> — Whisper 音频
+- <code>neurostream/encoder/unified.py</code> — 多模态路由器</p>
+<h3 id="section-02_project_codex-设计精髓">设计精髓</h3>
+<p><strong>ABC 抽象类 + 注册表 + 工厂方法</strong>(<code>UnifiedEncoder.default()</code> / <code>with_sbert()</code>)。这是个<strong>软件工程模式</strong>比 ML 理论更重要的章节。</p>
+<h3 id="section-02_project_codex-关键问题">关键问题</h3>
+<ol>
+<li><code>FeatureHashEncoder</code> 为什么是零依赖?(n-gram + 哈希)</li>
+<li><code>ProjectedEncoder</code> 怎么把 SBERT 的 384 维降到项目里的 128 维?</li>
+<li><strong>懒加载</strong>(<code>__getattr__</code>)和 <strong>pickle 安全</strong>(<code>__getstate__</code>)在 Windows spawn 多进程下为什么必要?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream.encoder</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> UnifiedEncoder
+enc <span style="color: #666">=</span> UnifiedEncoder<span style="color: #666">.</span>default(dim<span style="color: #666">=</span><span style="color: #40A070">128</span>)
+v <span style="color: #666">=</span> enc<span style="color: #666">.</span>encode(<span style="color: #4070A0">&quot;猫是哺乳动物&quot;</span>, modality<span style="color: #666">=</span><span style="color: #4070A0">&quot;text&quot;</span>)
+<span style="color: #007020">print</span>(v<span style="color: #666">.</span>shape, v<span style="color: #666">.</span>norm())  <span style="color: #60A0B0; font-style: italic"># torch.Size([128]), tensor(1.0)</span>
+</code></pre></div>
+
+<p><strong>注意 norm 是 1</strong> —— 编码器输出永远 L2 归一化(<code>base.py</code> 强制)。</p>
+<hr />
+<h2 id="section-02_project_codex-3-记忆池与分层存储">§3 记忆池与分层存储</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">01_systematic.md §10</a></p>
+<p>文件:
+- <code>neurostream/memory/buffer.py</code> — <code>ShortTermBuffer</code>(线程安全的队列)
+- <code>neurostream/memory/pool.py</code> — <strong><code>MemoryPool</code>(核心)</strong>
+- <code>neurostream/memory/tiered.py</code> — <code>TieredMemoryPool</code>(Hot/Warm/Cold)
+- <code>neurostream/consolidation/time_integral.py</code> — 时间积分固化策略</p>
+<h3 id="section-02_project_codex-数据流">数据流</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>encoder.encode(text)
+   ↓
+ShortTermBuffer.push(memory)          # 线程安全,先入临时缓冲
+   ↓
+pool.consolidate(buffer, threshold)   # 周期性固化:合并/丢弃/入池
+   ├─ merge: 高相似度 → 强度叠加 + 时间衰减
+   ├─ discard: 强度 &lt; threshold 直接扔
+   └─ add: 新记忆进 FAISS index
+   ↓
+pool.search(query, top_k)             # 检索:cos_sim + log(1+access_count)
+   ↓
+pool.decay(dt) + pool.prune()         # 周期性衰减 + 剪枝
+</code></pre></div>
+
+<h3 id="section-02_project_codex-关键代码">关键代码</h3>
+<p><code>pool.search</code> 的打分公式:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>score <span style="color: #666">=</span> cosine_similarity(query, memory) <span style="color: #666">+</span> log(<span style="color: #40A070">1</span> <span style="color: #666">+</span> access_count) <span style="color: #666">+</span> reward_weight <span style="color: #666">*</span> reward
+</code></pre></div>
+
+<p><code>pool.decay(dt, max_dt=5)</code>(2026-05 关键修复,见 <a href="#section-PROGRESS">PROGRESS.md</a> bug #8):</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #06287E">decay</span>(<span style="color: #007020">self</span>, dt: <span style="color: #007020">float</span>, max_dt: <span style="color: #007020">float</span> <span style="color: #666">=</span> <span style="color: #40A070">5.0</span>):
+    dt <span style="color: #666">=</span> <span style="color: #007020">min</span>(dt, max_dt)  <span style="color: #60A0B0; font-style: italic"># 钳制,避免 snapshot 期间累积秒数一次性吃光池子</span>
+    <span style="color: #007020; font-weight: bold">for</span> m <span style="color: #007020; font-weight: bold">in</span> <span style="color: #007020">self</span><span style="color: #666">.</span>memories:
+        m<span style="color: #666">.</span>intensity <span style="color: #666">*=</span> math<span style="color: #666">.</span>exp(<span style="color: #666">-</span><span style="color: #007020">self</span><span style="color: #666">.</span>decay_rate <span style="color: #666">*</span> dt)
+</code></pre></div>
+
+<h3 id="section-02_project_codex-关键问题">关键问题</h3>
+<ol>
+<li><code>MemoryPool</code> 用的是 <code>IndexFlatL2</code>(精确)还是 <code>IndexIVFFlat</code>(近似)?为什么?</li>
+<li><code>consolidate</code> 里"合并"和"丢弃"是怎么决策的?三个阈值各管什么?</li>
+<li><code>pool.decay</code> 为什么必须钳制 <code>max_dt=5</code>?(PROGRESS 里的真实事故)</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream.memory.pool</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> MemoryPool
+<span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> Memory
+<span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">torch</span>
+
+pool <span style="color: #666">=</span> MemoryPool(dim<span style="color: #666">=</span><span style="color: #40A070">128</span>, decay_rate<span style="color: #666">=</span><span style="color: #40A070">0.01</span>)
+<span style="color: #007020; font-weight: bold">for</span> _ <span style="color: #007020; font-weight: bold">in</span> <span style="color: #007020">range</span>(<span style="color: #40A070">100</span>):
+    pool<span style="color: #666">.</span>add(Memory(vector<span style="color: #666">=</span>torch<span style="color: #666">.</span>randn(<span style="color: #40A070">128</span>) <span style="color: #666">/</span> <span style="color: #40A070">11.3</span>))  <span style="color: #60A0B0; font-style: italic"># 大致归一化</span>
+q <span style="color: #666">=</span> torch<span style="color: #666">.</span>randn(<span style="color: #40A070">128</span>) <span style="color: #666">/</span> <span style="color: #40A070">11.3</span>
+results <span style="color: #666">=</span> pool<span style="color: #666">.</span>search(q, top_k<span style="color: #666">=</span><span style="color: #40A070">5</span>)
+<span style="color: #007020">print</span>(<span style="color: #007020">len</span>(results), results[<span style="color: #40A070">0</span>]<span style="color: #666">.</span>intensity)
+</code></pre></div>
+
+<hr />
+<h2 id="section-02_project_codex-4-影子权重核心差异化">§4 影子权重(核心差异化)</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">§4</a> + <a href="#section-01_systematic">§5 EMA</a> + <a href="#section-01_systematic">§9 对比学习</a></p>
+<blockquote>
+<p><strong>这是 NeuroStream 与所有 RAG 系统的根本区别</strong>。RAG 是把检索结果拼到 prompt 里;NeuroStream 真的让一部分模型参数(<code>MemoryProjector</code>)持续在变。</p>
+</blockquote>
+<p>文件:
+- <code>neurostream/shadow/projector.py</code> — <strong><code>MemoryProjector</code>(50 行,从这看起)</strong>
+- <code>neurostream/shadow/objectives.py</code> — InfoNCE / Reward-Weighted ContrastiveLoss
+- <code>neurostream/shadow/gradient.py</code> — <code>MemoryGradientComputer</code>(构造对比 batch)
+- <code>neurostream/shadow/sync.py</code> — <code>SharedWeightBuffer</code>(跨进程共享内存)
+- <code>neurostream/shadow/manager.py</code> — <code>ShadowWeightManager</code>(训练循环)</p>
+<h3 id="section-02_project_codex-41-memoryprojector--残差-mlp--zero-init必读-50-行">4.1 MemoryProjector —— 残差 MLP + Zero-Init(必读 50 行)</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">MemoryProjector</span>(nn<span style="color: #666">.</span>Module):
+    <span style="color: #007020; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #06287E">__init__</span>(<span style="color: #007020">self</span>, dim<span style="color: #666">=</span><span style="color: #40A070">128</span>, hidden<span style="color: #666">=</span><span style="color: #40A070">256</span>, device<span style="color: #666">=</span><span style="color: #4070A0">&quot;cpu&quot;</span>):
+        <span style="color: #007020">super</span>()<span style="color: #666">.</span><span style="color: #06287E">__init__</span>()
+        <span style="color: #007020">self</span><span style="color: #666">.</span>net <span style="color: #666">=</span> nn<span style="color: #666">.</span>Sequential(
+            nn<span style="color: #666">.</span>Linear(dim, hidden),
+            nn<span style="color: #666">.</span>GELU(),
+            nn<span style="color: #666">.</span>Linear(hidden, dim),
+        )
+        nn<span style="color: #666">.</span>init<span style="color: #666">.</span>zeros_(<span style="color: #007020">self</span><span style="color: #666">.</span>net[<span style="color: #666">-</span><span style="color: #40A070">1</span>]<span style="color: #666">.</span>weight)  <span style="color: #60A0B0; font-style: italic"># zero-init!</span>
+        nn<span style="color: #666">.</span>init<span style="color: #666">.</span>zeros_(<span style="color: #007020">self</span><span style="color: #666">.</span>net[<span style="color: #666">-</span><span style="color: #40A070">1</span>]<span style="color: #666">.</span>bias)
+
+    <span style="color: #007020; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #06287E">forward</span>(<span style="color: #007020">self</span>, x):
+        <span style="color: #007020; font-weight: bold">return</span> x <span style="color: #666">+</span> <span style="color: #007020">self</span><span style="color: #666">.</span>net(x)  <span style="color: #60A0B0; font-style: italic"># 残差</span>
+
+    <span style="color: #007020; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #06287E">project_and_normalize</span>(<span style="color: #007020">self</span>, x):
+        out <span style="color: #666">=</span> <span style="color: #007020">self</span><span style="color: #666">.</span>forward(x)
+        <span style="color: #007020; font-weight: bold">return</span> out <span style="color: #666">/</span> (out<span style="color: #666">.</span>norm(dim<span style="color: #666">=-</span><span style="color: #40A070">1</span>, keepdim<span style="color: #666">=</span><span style="color: #007020; font-weight: bold">True</span>) <span style="color: #666">+</span> <span style="color: #40A070">1e-8</span>)
+</code></pre></div>
+
+<p><strong>核心设计</strong>:
+- <strong>残差</strong>:<code>y = x + MLP(x)</code> → 让梯度能直通,深网络可训(参考 ResNet)
+- <strong>Zero-init 最后一层</strong>:<code>MLP(x) = 0</code> at day 0 → 整个 projector 是恒等映射,<strong>不影响现有逻辑</strong>
+- <strong>训练过程</strong>:对比学习慢慢学到一个比恒等映射更好的投射</p>
+<h3 id="section-02_project_codex-42-infonce-对比学习">4.2 InfoNCE 对比学习</h3>
+<p><code>shadow/objectives.py:ContrastiveLoss.forward</code>:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>proj_norm <span style="color: #666">=</span> F<span style="color: #666">.</span>normalize(projected, dim<span style="color: #666">=</span><span style="color: #40A070">1</span>)             <span style="color: #60A0B0; font-style: italic"># L2 归一化</span>
+logits <span style="color: #666">=</span> proj_norm <span style="color: #666">@</span> proj_norm<span style="color: #666">.</span>T <span style="color: #666">/</span> <span style="color: #007020">self</span><span style="color: #666">.</span>temperature   <span style="color: #60A0B0; font-style: italic"># (N, N) 相似度</span>
+logits_off <span style="color: #666">=</span> logits<span style="color: #666">.</span>masked_select(<span style="color: #666">~</span>eye)<span style="color: #666">.</span>view(N, N<span style="color: #666">-</span><span style="color: #40A070">1</span>)  <span style="color: #60A0B0; font-style: italic"># 去对角线</span>
+labels <span style="color: #666">=</span> F<span style="color: #666">.</span>softmax(gt_off <span style="color: #666">/</span> temperature, dim<span style="color: #666">=</span><span style="color: #40A070">1</span>)       <span style="color: #60A0B0; font-style: italic"># 软标签</span>
+loss <span style="color: #666">=</span> <span style="color: #666">-</span>(labels <span style="color: #666">*</span> F<span style="color: #666">.</span>log_softmax(logits_off, dim<span style="color: #666">=</span><span style="color: #40A070">1</span>))<span style="color: #666">.</span>sum(dim<span style="color: #666">=</span><span style="color: #40A070">1</span>)<span style="color: #666">.</span>mean()
+</code></pre></div>
+
+<p><strong>关键细节</strong>:<strong>软标签</strong>(用真实相似度的 softmax)而不是 one-hot —— 比标准 InfoNCE 更稳。</p>
+<h3 id="section-02_project_codex-43-跨进程同步-sharedweightbuffer">4.3 跨进程同步 SharedWeightBuffer</h3>
+<p><code>shadow/sync.py</code>:基于 <code>torch.share_memory_()</code>,<strong>近乎无锁</strong>。学习进程 <code>push()</code>,推理进程 <code>pull(ema_alpha=0.01)</code>:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>θ <span style="border: 1px solid #F00">←</span> (<span style="color: #40A070">1</span><span style="color: #666">-</span>α)<span style="border: 1px solid #F00">·</span>θ <span style="color: #666">+</span> α·θ_shadow
+</code></pre></div>
+
+<p>α=0.005-0.01 → 大约 100-200 次 pull 才完全收敛 → 推理行为<strong>平滑演化,不会突变</strong>。</p>
+<h3 id="section-02_project_codex-关键问题每题都要会">关键问题(每题都要会)</h3>
+<ol>
+<li>残差 + zero-init 在数学上意味着 day-0 模型行为是什么?</li>
+<li>InfoNCE 里 <code>temperature</code> 太小(0.01)/ 太大(1.0)各会怎样?</li>
+<li><code>MemoryGradientComputer</code> 是怎么从 <code>List[Memory]</code> 构造一个 batch 的?(看 <code>shadow/gradient.py</code>)</li>
+<li>为什么用 EMA 而不是直接覆盖?(PROGRESS bug #9:覆盖太突然导致输出乱码)</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<p>读完 <code>projector.py</code> 50 行,<strong>关闭文件</strong>,在纸上默写出来。验收标准:能写出 <code>__init__</code> + <code>forward</code> + <code>project_and_normalize</code>。</p>
+<hr />
+<h2 id="section-02_project_codex-5-memory-conditioned-transformer">§5 Memory-Conditioned Transformer</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">§7</a> + <a href="#section-01_systematic">§5 训练工程</a> + <a href="#section-01_systematic">§8 生成</a></p>
+<blockquote>
+<p>这是项目最重的章节,占整个 NeuroStream 模型参数的 99%(95M / 95.06M)。</p>
+</blockquote>
+<p>文件:
+- <code>neurostream/transformer/tokenizer.py</code> — tiktoken cl100k_base 封装
+- <code>neurostream/transformer/config.py</code> — <code>TransformerConfig</code>
+- <code>neurostream/transformer/model.py</code> — <strong>核心模型</strong>
+- <code>neurostream/transformer/train.py</code> — <code>TransformerTrainer</code>
+- <code>neurostream/transformer/generate.py</code> — 自回归生成</p>
+<h3 id="section-02_project_codex-51-modelpy-结构总览">5.1 model.py 结构总览</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>neurostream/transformer/model.py
+├─ RMSNorm                       # 比 LayerNorm 少减均值,等效 + 略快
+├─ RotaryEmbedding               # RoPE 位置编码:在 Q/K 上旋转
+├─ _rotate_half / apply_rope     # 旋转算子
+├─ SwiGLUFFN                     # SwiGLU 激活的 FFN(参数量 ≈ 2.67·d²)
+├─ CausalSelfAttention           # 因果自注意力(Q=K=V=token)
+├─ MemoryCrossAttention          # 记忆交叉注意力(Q=token, K/V=memory)
+├─ DecoderBlock                  # self-attn → cross-attn → FFN
+└─ MemoryConditionedTransformer  # 堆 N 层 DecoderBlock
+</code></pre></div>
+
+<h3 id="section-02_project_codex-52-单层-decoderblock-数据流">5.2 单层 DecoderBlock 数据流</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>x  ──→ RMSNorm ──→ CausalSelfAttention(x) ──┐
+       │                                     │
+       └─────────── residual ──────────────→ + ──→ x&#39;
+                                                  │
+x&#39; ──→ RMSNorm ──→ MemoryCrossAttention(x&#39;, mem) ─┐
+       │                                          │
+       └────────── residual ──────────────────────→ + ──→ x&#39;&#39;
+                                                       │
+x&#39;&#39; ──→ RMSNorm ──→ SwiGLUFFN(x&#39;&#39;) ──┐
+        │                            │
+        └──── residual ──────────────→ + ──→ output
+</code></pre></div>
+
+<p><strong>Pre-LN 结构</strong>(LayerNorm 在 sublayer 内、residual 之前),12 层堆叠。</p>
+<h3 id="section-02_project_codex-53-rope-关键代码">5.3 RoPE 关键代码</h3>
+<p><code>model.py:apply_rope</code>:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #06287E">apply_rope</span>(q, k, cos, sin):
+    q_rot <span style="color: #666">=</span> (q <span style="color: #666">*</span> cos) <span style="color: #666">+</span> (_rotate_half(q) <span style="color: #666">*</span> sin)
+    k_rot <span style="color: #666">=</span> (k <span style="color: #666">*</span> cos) <span style="color: #666">+</span> (_rotate_half(k) <span style="color: #666">*</span> sin)
+    <span style="color: #007020; font-weight: bold">return</span> q_rot, k_rot
+</code></pre></div>
+
+<p><strong>为什么 RoPE 比 absolute / learned 好</strong>:
+- 编码"相对位置"而非绝对位置(<code>q_i · k_j</code> 的内积只跟 <code>i-j</code> 有关)
+- 外推性好(训练时只见 512,推理可达 2048)
+- LLaMA / Qwen / Mistral 全部用 RoPE</p>
+<h3 id="section-02_project_codex-54-训练-trainpytrainstep">5.4 训练 train.py:train_step</h3>
+<p>文件:<code>neurostream/transformer/train.py:130-222</code></p>
+<p>关键技术:
+- <strong>Reward-weighted loss</strong>:<code>(per_sample_loss * weights).sum() / weights.sum()</code>,weight = <code>1 + reward</code>
+- <strong>梯度累积</strong>(grad_accum=8):micro batch 内 <code>scaled_loss = weighted_loss / accum_steps</code>
+- <strong>fp16 混合精度</strong>:<code>autocast</code> + <code>GradScaler</code>
+- <strong>clip_grad_norm_(1.0)</strong>:防爆炸
+- <strong>scheduler</strong>:warmup 500 步 + cosine decay</p>
+<h3 id="section-02_project_codex-55-evaluate2026-05-新增早停用">5.5 evaluate(2026-05 新增,早停用)</h3>
+<p><code>train.py:225-285</code>:teacher-forcing forward + per-token cross-entropy。<strong>与 train_step 区别</strong>:
+- <code>model.eval() + torch.no_grad()</code>
+- 不加 reward 权重(纯均匀)
+- 按 token 数归一化(而非样本数,避免长短样本权重失衡)
+- 返回 <code>{val_loss, val_perplexity, n_samples, n_tokens}</code></p>
+<h3 id="section-02_project_codex-56-生成-generatepy">5.6 生成 generate.py</h3>
+<p>支持 <code>temperature</code> / <code>top_k</code> / <code>top_p</code> 三种采样,顺序:
+1. logits / temperature
+2. top-k 过滤(保留前 k)
+3. top-p 过滤(累积概率到 p)
+4. softmax → multinomial 采样</p>
+<h3 id="section-02_project_codex-关键问题共-10-题">关键问题(共 10 题)</h3>
+<ol>
+<li>RMSNorm 比 LayerNorm 简化在哪?数学上为什么等价(几乎)?</li>
+<li>RoPE 怎么把位置信息编码进 attention?(在 Q/K 而非 input)</li>
+<li>SwiGLU 比 GELU 多出来的"门控"在做什么?</li>
+<li><code>CausalSelfAttention</code> 里因果掩码是怎么实现的?(<code>tril</code> 矩阵)</li>
+<li><code>MemoryCrossAttention</code> 与 <code>CausalSelfAttention</code> 三点不同?(无掩码,Q≠K/V,memory_dim≠d_model)</li>
+<li><code>MemoryConditionedTransformer.forward(input_ids, memory_vectors, memory_mask)</code> 三个输入的形状?</li>
+<li><code>gradient_accumulation_steps=8</code> 在 <code>train_step</code> 里如何体现?</li>
+<li>为什么训练时 <code>model.train()</code>,evaluate 时 <code>model.eval()</code>?(Dropout / BN 行为不同)</li>
+<li><code>decoder_buffer_size=600_000</code> 是什么的容量?(<code>ConversationBuffer</code>)</li>
+<li>tiktoken cl100k_base 的特殊 token 是哪些?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<ol>
+<li>用 IPython 实例化最小模型:</li>
+</ol>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream.transformer.config</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> TransformerConfig
+<span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream.transformer.model</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> MemoryConditionedTransformer
+<span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">torch</span>
+cfg <span style="color: #666">=</span> TransformerConfig(n_layers<span style="color: #666">=</span><span style="color: #40A070">2</span>, d_model<span style="color: #666">=</span><span style="color: #40A070">64</span>, n_heads<span style="color: #666">=</span><span style="color: #40A070">4</span>, d_ff<span style="color: #666">=</span><span style="color: #40A070">128</span>, max_seq_len<span style="color: #666">=</span><span style="color: #40A070">32</span>, memory_dim<span style="color: #666">=</span><span style="color: #40A070">64</span>)
+m <span style="color: #666">=</span> MemoryConditionedTransformer(cfg)
+ids <span style="color: #666">=</span> torch<span style="color: #666">.</span>randint(<span style="color: #40A070">0</span>, cfg<span style="color: #666">.</span>vocab_size, (<span style="color: #40A070">1</span>, <span style="color: #40A070">16</span>))
+mem <span style="color: #666">=</span> torch<span style="color: #666">.</span>randn(<span style="color: #40A070">1</span>, <span style="color: #40A070">3</span>, <span style="color: #40A070">64</span>)
+mask <span style="color: #666">=</span> torch<span style="color: #666">.</span>ones(<span style="color: #40A070">1</span>, <span style="color: #40A070">3</span>, dtype<span style="color: #666">=</span>torch<span style="color: #666">.</span>bool)
+out <span style="color: #666">=</span> m(ids, mem, mask)
+<span style="color: #007020">print</span>(out<span style="color: #666">.</span>shape)  <span style="color: #60A0B0; font-style: italic"># (1, 16, vocab_size)</span>
+</code></pre></div>
+
+<ol start="2">
+<li>把 <code>memory_mask</code> 全置 False(<code>mask = torch.zeros(...)</code>),看输出是否不同。理解 mask 的作用。</li>
+</ol>
+<hr />
+<h2 id="section-02_project_codex-6-持续学习与抗遗忘">§6 持续学习与抗遗忘</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">01_systematic.md §11</a></p>
+<p>文件:
+- <code>neurostream/forgetting/base.py</code> — <code>ForgettingStrategy</code> ABC + <code>NoOpStrategy</code>
+- <code>neurostream/forgetting/ewc.py</code> — <strong><code>EWC</code>(Elastic Weight Consolidation)</strong>
+- <code>neurostream/forgetting/replay.py</code> — <code>ExperienceReplay</code>(蓄水池采样)</p>
+<h3 id="section-02_project_codex-61-ewc-数学">6.1 EWC 数学</h3>
+<p><code>L_total = L_new + λ · Σᵢ Fᵢ · (θᵢ - θ*ᵢ)²</code></p>
+<ul>
+<li><code>θ*ᵢ</code>:旧任务训练后的"锚点"参数</li>
+<li><code>Fᵢ</code>:对角 Fisher 信息(参数对似然的敏感度)</li>
+<li><code>λ</code>:正则强度(项目默认 500)</li>
+</ul>
+<h3 id="section-02_project_codex-62-关键代码">6.2 关键代码</h3>
+<p><code>forgetting/ewc.py:EWC._compute_fisher</code>:用历史 batch 的梯度平方近似 Fisher 对角元。
+<code>forgetting/ewc.py:EWC.penalty</code>:返回二次项 loss,加到主 loss 上。</p>
+<h3 id="section-02_project_codex-63-experience-replay-蓄水池采样">6.3 Experience Replay 蓄水池采样</h3>
+<p><code>forgetting/replay.py</code>:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #60A0B0; font-style: italic"># 蓄水池采样保证流式数据下每条历史样本被保留概率相等</span>
+<span style="color: #007020; font-weight: bold">if</span> <span style="color: #007020">len</span>(buffer) <span style="color: #666">&lt;</span> k:
+    buffer<span style="color: #666">.</span>append(item)
+<span style="color: #007020; font-weight: bold">else</span>:
+    j <span style="color: #666">=</span> random<span style="color: #666">.</span>randint(<span style="color: #40A070">0</span>, count <span style="color: #666">-</span> <span style="color: #40A070">1</span>)
+    <span style="color: #007020; font-weight: bold">if</span> j <span style="color: #666">&lt;</span> k:
+        buffer[j] <span style="color: #666">=</span> item
+</code></pre></div>
+
+<h3 id="section-02_project_codex-关键问题">关键问题</h3>
+<ol>
+<li><code>λ=500</code> 太大 / 太小各会怎样?</li>
+<li>Fisher 对角近似的精度损失能接受吗?(实证上 OK)</li>
+<li>EWC 和 Experience Replay 能同时用吗?(可以,叠加效果通常更好)</li>
+<li>蓄水级采样在第 <code>count=10000, k=512</code> 时,新样本被纳入的概率是?(512/10000)</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<p>读 <code>forgetting/replay.py</code> 全文(很短),手算:数据流来到第 1000 条时,第 1 条还在 buffer 的概率是多少?(<code>512/1000</code>)</p>
+<hr />
+<h2 id="section-02_project_codex-7-双进程运行时">§7 双进程运行时</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">01_systematic.md §12</a></p>
+<blockquote>
+<p>项目最复杂的工程章节。但<strong>只有这里</strong>让"边推理边学习"成为可能。</p>
+</blockquote>
+<p>文件:
+- <code>neurostream/runtime/channels.py</code> — <code>ChannelSet</code>(8 个 Queue)
+- <code>neurostream/runtime/engine.py</code> — <code>NeuroStreamEngine</code>(生命周期管理)
+- <code>neurostream/runtime/inference.py</code> — 推理进程主循环
+- <code>neurostream/runtime/learning.py</code> — 学习进程主循环
+- <code>neurostream/shadow/sync.py</code> — <code>SharedWeightBuffer</code>(共享内存)</p>
+<h3 id="section-02_project_codex-71-进程拓扑">7.1 进程拓扑</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>                Main 进程
+              (engine.ingest)
+                    │
+                    ▼ input_q
+┌─────────────────────────────────────────────────┐
+│                                                  │
+│  推理进程 (Inference)         学习进程 (Learning) │
+│  ─ 接收输入                   ─ ShortTermBuffer  │
+│  ─ encoder.encode             ─ MemoryPool       │
+│  ─ projector投射 + L2         ─ consolidate      │
+│  ─ search_req → 学习          ─ decay + prune    │
+│  ─ Memory 入队 ─ memory_q ──→ ─ ShadowMgr 训练   │
+│  ─ EMA pull 影子权重          ─ TransformerTrainer│
+│                               ─ push_to_buffer    │
+└──────────┬────────────────────┴──────────────────┘
+           │
+           ▼
+     SharedWeightBuffer  (torch.share_memory_)
+        (EMA 同步)
+</code></pre></div>
+
+<h3 id="section-02_project_codex-72-八条-queue每条都是契约">7.2 八条 Queue(每条都是契约)</h3>
+<table>
+<thead>
+<tr>
+<th>Queue</th>
+<th>方向</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input_q</code></td>
+<td>Main → 推理</td>
+<td>原始输入 dict / None(毒丸)</td>
+</tr>
+<tr>
+<td><code>memory_q</code></td>
+<td>推理 → 学习</td>
+<td>新 <code>Memory</code> 对象</td>
+</tr>
+<tr>
+<td><code>search_req_q</code></td>
+<td>推理 → 学习</td>
+<td><code>(query_vec, top_k)</code></td>
+</tr>
+<tr>
+<td><code>search_resp_q</code></td>
+<td>学习 → 推理</td>
+<td><code>List[Memory]</code></td>
+</tr>
+<tr>
+<td><code>conversation_q</code></td>
+<td>Main → 学习</td>
+<td>decoder 训练数据</td>
+</tr>
+<tr>
+<td><code>generate_req_q</code> / <code>resp_q</code></td>
+<td>Main → 推理 → Main</td>
+<td>生成请求/响应</td>
+</tr>
+<tr>
+<td><code>feedback_q</code></td>
+<td>Main → 学习</td>
+<td>reward 信号</td>
+</tr>
+<tr>
+<td><code>snapshot_req_q</code> / <code>resp_q</code></td>
+<td>Main → 学习 → Main</td>
+<td>非破坏快照</td>
+</tr>
+<tr>
+<td><strong><code>eval_req_q</code> / <code>resp_q</code></strong></td>
+<td>Main → 学习 → Main</td>
+<td>val_loss 评估(早停用,2026-05 新增)</td>
+</tr>
+<tr>
+<td><code>metrics_q</code></td>
+<td>学习 → Main</td>
+<td>训练指标</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-02_project_codex-73-学习进程主循环learningpy">7.3 学习进程主循环(<code>learning.py</code>)</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">while</span> <span style="color: #007020; font-weight: bold">not</span> stop_event<span style="color: #666">.</span>is_set():
+    <span style="color: #60A0B0; font-style: italic"># 1. 收集新记忆到 ShortTermBuffer</span>
+    drain(channels<span style="color: #666">.</span>memory_q) <span style="border: 1px solid #F00">→</span> buffer
+
+    <span style="color: #60A0B0; font-style: italic"># 2. 响应检索请求</span>
+    drain(channels<span style="color: #666">.</span>search_req_q) <span style="border: 1px solid #F00">→</span> pool<span style="color: #666">.</span>search <span style="border: 1px solid #F00">→</span> search_resp_q
+
+    <span style="color: #60A0B0; font-style: italic"># 3. 处理反馈</span>
+    drain(channels<span style="color: #666">.</span>feedback_q) <span style="border: 1px solid #F00">→</span> 更新 memory<span style="color: #666">.</span>reward
+
+    <span style="color: #60A0B0; font-style: italic"># 4. 处理快照/评估请求</span>
+    handle snapshot_req_q
+    handle eval_req_q  <span style="color: #60A0B0; font-style: italic"># 2026-05 新增</span>
+
+    <span style="color: #60A0B0; font-style: italic"># 5. 收集对话训练数据</span>
+    drain(channels<span style="color: #666">.</span>conversation_q) <span style="border: 1px solid #F00">→</span> conversation_buffer
+
+    <span style="color: #60A0B0; font-style: italic"># 6. 周期性固化 + 衰减 + 剪枝</span>
+    <span style="color: #007020; font-weight: bold">if</span> now <span style="color: #666">-</span> last_learn <span style="color: #666">&gt;=</span> <span style="color: #40A070">1.0</span>:
+        pool<span style="color: #666">.</span>consolidate(buffer)
+        pool<span style="color: #666">.</span>decay(dt<span style="color: #666">=</span><span style="color: #40A070">1.0</span>)
+        pool<span style="color: #666">.</span>prune()
+
+    <span style="color: #60A0B0; font-style: italic"># 7. 周期性影子权重训练</span>
+    <span style="color: #007020; font-weight: bold">if</span> now <span style="color: #666">-</span> last_shadow <span style="color: #666">&gt;=</span> <span style="color: #40A070">10.0</span>:
+        shadow_mgr<span style="color: #666">.</span>train_step(pool<span style="color: #666">.</span>memories)
+        shadow_mgr<span style="color: #666">.</span>push_to_buffer(shadow_buffer)
+
+    <span style="color: #60A0B0; font-style: italic"># 8. 周期性 Transformer 训练</span>
+    <span style="color: #007020; font-weight: bold">if</span> (in_active_group <span style="color: #007020; font-weight: bold">or</span> now <span style="color: #666">-</span> last_decoder <span style="color: #666">&gt;=</span> interval):
+        decoder_trainer<span style="color: #666">.</span>train_step(n_steps<span style="color: #666">=</span><span style="color: #40A070">1</span>)
+        <span style="color: #007020; font-weight: bold">if</span> 组内剩余 <span style="color: #666">==</span> <span style="color: #40A070">0</span>:
+            decoder_trainer<span style="color: #666">.</span>push_to_buffer(decoder_buffer)
+
+    time<span style="color: #666">.</span>sleep(<span style="color: #40A070">0.05</span>)
+</code></pre></div>
+
+<h3 id="section-02_project_codex-74-必须知道的几个坑全在-progressmd-里">7.4 必须知道的几个"坑"(全在 PROGRESS.md 里)</h3>
+<table>
+<thead>
+<tr>
+<th>Bug</th>
+<th>现象</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#2</td>
+<td>cross-attn 训练时见不到记忆</td>
+<td><code>engine.teach()</code> 传 query_vec 给 learning_worker</td>
+</tr>
+<tr>
+<td>#4</td>
+<td><code>wait_drain</code> 卡住</td>
+<td>Windows <code>mp.Queue.qsize()</code> 在子进程消费后不递减</td>
+</tr>
+<tr>
+<td>#5</td>
+<td>92% 训练数据被静默丢弃</td>
+<td><code>ConversationBuffer</code> 5K → 600K</td>
+</tr>
+<tr>
+<td>#8</td>
+<td>snapshot 后 pool 一次性 179K→21</td>
+<td><code>pool.decay(max_dt=5)</code> 钳制</td>
+</tr>
+<tr>
+<td>#9</td>
+<td>输出乱码</td>
+<td>inference 端 resume 加载 decoder state + 主动 EMA pull</td>
+</tr>
+<tr>
+<td>#10</td>
+<td>loss 假性掉 0.04</td>
+<td>移除 inference→training 回灌</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-02_project_codex-关键问题共-8-题">关键问题(共 8 题)</h3>
+<ol>
+<li><code>mp.set_start_method("spawn", force=True)</code> 在 Windows 是必须的,为什么?</li>
+<li>为什么训练在 GPU,push_to_buffer 时却要拷贝到 CPU 共享内存?</li>
+<li><code>SharedWeightBuffer.push(model)</code> 是同步还是异步?(同步)</li>
+<li>主进程发"毒丸"(<code>None</code>)给 input_q,推理进程怎么响应?</li>
+<li><code>decoder_train_steps_per_update=16</code> 这一组 16 步内,推理端能看到训练好的权重吗?(看不到,push 才同步)</li>
+<li>EMA α=0.005,推理端从收到 push 到完全收敛新权重需要多少次 pull?(约 200)</li>
+<li><code>mp.Queue.qsize()</code> 在 Windows 不可靠,为什么 <code>wait_drain</code> 仍然能用?(检查 conversation_q 而非 memory_q + 多次 stable 判定)</li>
+<li>8 个 Queue 里哪个是双向的?哪个是单向的?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<p>不跑训练,只启动 engine 看进程初始化:</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> NeuroStreamPipeline
+<span style="color: #007020; font-weight: bold">with</span> NeuroStreamPipeline(dim<span style="color: #666">=</span><span style="color: #40A070">128</span>) <span style="color: #007020; font-weight: bold">as</span> pipe:
+    pipe<span style="color: #666">.</span>ingest(<span style="color: #4070A0">&quot;猫是哺乳动物&quot;</span>)
+    <span style="color: #007020; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">time</span>; time<span style="color: #666">.</span>sleep(<span style="color: #40A070">3</span>)
+    <span style="color: #60A0B0; font-style: italic"># 看 stderr 输出 [Learning] consolidated N, pool=...</span>
+</code></pre></div>
+
+<hr />
+<h2 id="section-02_project_codex-8-训练入口-trainpy">§8 训练入口 train.py</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">§5 训练工程</a> + <a href="#section-01_systematic">§11 持续学习</a></p>
+<p>文件:<code>train.py</code>(项目唯一训练入口)</p>
+<h3 id="section-02_project_codex-81-流程图">8.1 流程图</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>main()
+├─ argparse 解析参数
+├─ load_dataset(en, zh)                       # 加载 250K 医学对话
+├─ split_train_val                            # 245K / 5K
+├─ tokenize_val_records(val_data)             # 主进程预 tokenize val 集
+├─ build_config(args) → NeuroStreamConfig
+├─ NeuroStreamTrainer(config).engine.start()  # spawn 2 个进程
+└─ run_continual(engine, train_data, val_records, args):
+    ├─ 阶段 1: PUSH
+    │   for item in train_data:
+    │       engine.ingest(query)              # → memory_q
+    │       engine.teach(query, response)     # → conversation_q
+    ├─ 阶段 2: DRAIN
+    │   wait_drain(conversation_q, 600s)
+    └─ 阶段 3: TRAIN-UNTIL-STOP
+        loop:
+            cur_step = collect_latest_step(metrics_q)
+            if cur_step &gt;= next_eval_step:
+                metrics = engine.evaluate_val_loss(val_records[:200])
+                if val_loss &lt; best:
+                    save snapshot_best.pt
+                    patience = 0
+                else:
+                    patience += 1
+                    if cur_step &gt;= target and patience &gt;= 5: break
+                    if patience &gt;= 10: break
+            sleep(10)
+    └─ save snapshot_final.pt
+    └─ run_eval(generate 30 条 + 软指标)
+    └─ render_reports(scorecard.png + val_loss_curve.png)
+</code></pre></div>
+
+<h3 id="section-02_project_codex-82-关键参数2026-05-早停改造后">8.2 关键参数(2026-05 早停改造后)</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target-epochs</code></td>
+<td>1.0</td>
+<td>等量 epoch 目标(数据量/effective_batch)</td>
+</tr>
+<tr>
+<td><code>--min-steps</code></td>
+<td>2000</td>
+<td>兜底最小步数</td>
+</tr>
+<tr>
+<td><code>--early-stop</code></td>
+<td>True</td>
+<td>默认开启,<code>--no-early-stop</code> 关</td>
+</tr>
+<tr>
+<td><code>--early-stop-eval-every</code></td>
+<td>500</td>
+<td>每 N step 评估一次</td>
+</tr>
+<tr>
+<td><code>--early-stop-patience</code></td>
+<td>5</td>
+<td>连续 N 次没改善</td>
+</tr>
+<tr>
+<td><code>--early-stop-min-delta</code></td>
+<td>0.001</td>
+<td>改善阈值</td>
+</tr>
+<tr>
+<td><code>--early-stop-eval-n</code></td>
+<td>200</td>
+<td>val 采样数</td>
+</tr>
+<tr>
+<td><code>--max-hours</code></td>
+<td>168</td>
+<td>兜底硬上限(7 天)</td>
+</tr>
+<tr>
+<td><code>--decoder-interval</code></td>
+<td>0.0</td>
+<td>组间间隔(GPU 吞吐调优)</td>
+</tr>
+<tr>
+<td><code>--decoder-steps-per-group</code></td>
+<td>16</td>
+<td>组内连续步数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-02_project_codex-83-早停停止判定trainuntilstop">8.3 早停停止判定(<code>train_until_stop</code>)</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">if</span> val_loss <span style="color: #666">&lt;</span> best <span style="color: #666">-</span> min_delta:
+    patience <span style="color: #666">=</span> <span style="color: #40A070">0</span>
+    save(<span style="color: #4070A0">&quot;snapshot_best.pt&quot;</span>)
+<span style="color: #007020; font-weight: bold">else</span>:
+    patience <span style="color: #666">+=</span> <span style="color: #40A070">1</span>
+
+<span style="color: #007020; font-weight: bold">if</span> cur_step <span style="color: #666">&gt;=</span> target <span style="color: #007020; font-weight: bold">and</span> patience <span style="color: #666">&gt;=</span> <span style="color: #40A070">5</span>:      <span style="color: #60A0B0; font-style: italic"># 双条件</span>
+    stop_reason <span style="color: #666">=</span> <span style="color: #4070A0">&quot;early-stop&quot;</span>
+<span style="color: #007020; font-weight: bold">if</span> patience <span style="color: #666">&gt;=</span> <span style="color: #40A070">10</span>:                              <span style="color: #60A0B0; font-style: italic"># hard limit</span>
+    stop_reason <span style="color: #666">=</span> <span style="color: #4070A0">&quot;early-stop hard limit&quot;</span>
+<span style="color: #007020; font-weight: bold">if</span> elapsed <span style="color: #666">&gt;</span> max_hours <span style="color: #666">*</span> <span style="color: #40A070">3600</span>:
+    stop_reason <span style="color: #666">=</span> <span style="color: #4070A0">&quot;max-hours&quot;</span>
+<span style="color: #007020; font-weight: bold">if</span> interrupted:                                 <span style="color: #60A0B0; font-style: italic"># SIGINT</span>
+    stop_reason <span style="color: #666">=</span> <span style="color: #4070A0">&quot;interrupted&quot;</span>
+</code></pre></div>
+
+<h3 id="section-02_project_codex-关键问题">关键问题</h3>
+<ol>
+<li><code>--target-epochs=1.0</code> + 250K 样本 + effective_batch=32,target_step 是多少?(7813)</li>
+<li>为什么 push 阶段完成后才启动早停(而不是 push 期间)?(防止 buffer 没填满时 val_loss 不稳)</li>
+<li><code>wait_drain</code> 只看 conversation_q,为什么不看 memory_q?(Windows mp.Queue bug)</li>
+<li>SIGINT 触发后会发生什么序列动作?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<p>跑一个最小 pilot(2k EN + 8k ZH,几分钟跑完,验证流程):</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>python train.py --en-size 2000 --zh-size 8000 `
+                --early-stop-eval-every 100 `
+                --early-stop-patience 3 `
+                --output output/pilot_codex_test
+</code></pre></div>
+
+<p>看 <code>training_log.json</code> 里 <code>early_stop.val_history</code>,理解每个字段含义。</p>
+<hr />
+<h2 id="section-02_project_codex-9-agent--工具系统-可选">§9 Agent / 工具系统 (可选)</h2>
+<p><strong>关联系统理论</strong>:<a href="#section-01_systematic">01_systematic.md §13</a></p>
+<blockquote>
+<p>Phase 1/2 不依赖。规划上 OpenAI 兼容 API 时再深入。</p>
+</blockquote>
+<p>文件:
+- <code>neurostream/tools/base.py</code> — <code>Tool</code> ABC + <code>ToolRegistry</code>
+- <code>neurostream/tools/builtin/</code> — Calculator / PythonExec / HTTPRequest
+- <code>neurostream/tools/mcp/</code> — MCP 协议(JSON-RPC 2.0)
+- <code>neurostream/agent/teacher.py</code> — <code>TeacherLLM</code>(DashScope)
+- <code>neurostream/agent/evaluator.py</code> — <code>BenchmarkEvaluator</code>(4 维评测)
+- <code>neurostream/agent/report.py</code> — <code>BenchmarkReporter</code>(Matplotlib)
+- <code>neurostream/agent/loop.py</code> — <code>AgentLoop</code>(Teacher→Student 蒸馏)</p>
+<h3 id="section-02_project_codex-91-tool-调用流程">9.1 Tool 调用流程</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>LLM 输出含 &lt;tool:calculator&gt;{&quot;expression&quot;: &quot;1+2&quot;}&lt;/tool&gt;
+   ↓
+generate.py 解析特殊标记
+   ↓
+ToolRegistry.execute(&quot;calculator&quot;, {&quot;expression&quot;: &quot;1+2&quot;})
+   ↓
+返回 ToolResult(output=&quot;3.0&quot;)
+   ↓
+回灌 generation context 继续生成
+</code></pre></div>
+
+<h3 id="section-02_project_codex-92-mcp-协议">9.2 MCP 协议</h3>
+<p>JSON-RPC 2.0 over stdio,Anthropic 推的开放标准,目的是让 LLM 能用任何外部工具(GitHub / Slack / 数据库 / ...)。</p>
+<h3 id="section-02_project_codex-93-蒸馏-agentloop">9.3 蒸馏 AgentLoop</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Teacher LLM (Qwen3-Max via DashScope)
+   ↓ 给定 query 生成参考 answer
+Student (NeuroStream&#39;s decoder)
+   ↓ 用 (query, answer) 做 reward-weighted 训练
+   ↓ 评测打分
+BenchmarkReporter
+   ↓ 输出论文风格表格 / 雷达图
+</code></pre></div>
+
+<h3 id="section-02_project_codex-关键问题">关键问题</h3>
+<ol>
+<li>Tool 输出是怎么进 token 流的?(特殊标记 + tokenizer)</li>
+<li>MCP 与 OpenAI function calling 协议层差异?</li>
+<li>蒸馏 vs 直接训练(在 medical_cleaned.json 上),收益差在哪?</li>
+</ol>
+<h3 id="section-02_project_codex-实操">实操</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #007020; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #0E84B5; font-weight: bold">neurostream</span><span style="color: #BBB"> </span><span style="color: #007020; font-weight: bold">import</span> NeuroStreamPipeline
+pipe <span style="color: #666">=</span> NeuroStreamPipeline(dim<span style="color: #666">=</span><span style="color: #40A070">128</span>, tools_enabled<span style="color: #666">=</span><span style="color: #007020; font-weight: bold">True</span>)
+result <span style="color: #666">=</span> pipe<span style="color: #666">.</span>call_tool(<span style="color: #4070A0">&quot;calculator&quot;</span>, {<span style="color: #4070A0">&quot;expression&quot;</span>: <span style="color: #4070A0">&quot;sqrt(144) + pi&quot;</span>})
+<span style="color: #007020">print</span>(result<span style="color: #666">.</span>output)  <span style="color: #60A0B0; font-style: italic"># &quot;15.141592653589793&quot;</span>
+</code></pre></div>
+
+<hr />
+<h2 id="section-02_project_codex-通关检验">通关检验</h2>
+<p>学完 9 章,这些任务你应该都能独立完成:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>任务</th>
+<th>涉及</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>给 <code>MemoryProjector</code> 加一层(<code>dim → hidden → hidden → dim</code>)并重训</td>
+<td>§4</td>
+</tr>
+<tr>
+<td>2</td>
+<td>修改 <code>TransformerConfig</code>,把 <code>n_layers</code> 从 12 改成 6,跑通训练</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>3</td>
+<td>实现一个简单 <code>ForgettingStrategy.SmartReplay</code>(按 reward 加权采样而非均匀)</td>
+<td>§6</td>
+</tr>
+<tr>
+<td>4</td>
+<td>给 <code>ChannelSet</code> 加一条新 Queue(比如 <code>health_check_q</code>),改 learning_worker 响应</td>
+<td>§7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>给 <code>train.py</code> 加一个 <code>--early-stop-metric</code> 参数,可选 <code>val_loss</code> / <code>char_overlap</code></td>
+<td>§8</td>
+</tr>
+<tr>
+<td>6</td>
+<td>用 FastAPI 写一个 <code>/v1/chat/completions</code> 端点,调 <code>engine.generate()</code></td>
+<td>§9</td>
+</tr>
+</tbody>
+</table>
+<p>完成任意 3 个,你就完全掌控这个项目。</p>
+<hr />
+<h2 id="section-02_project_codex-推荐配套阅读顺序">推荐配套阅读顺序</h2>
+<ol>
+<li><a href="#section-PROGRESS">PROGRESS.md</a> —— 真实事故录,11 个 bug 等于 11 节"反面教材课"</li>
+<li><a href="#section-architecture">docs/architecture.md</a> —— 系统架构鸟瞰图(已经熟悉的概念,作为索引)</li>
+<li><a href="#section-math_formulas">docs/math_formulas.md</a> —— 25 个核心公式</li>
+<li><a href="#section-medical_v3">docs/experiments/medical_v3.md</a> —— V3 实验报告,看真实指标</li>
+</ol>
+<hr />
+<p><strong>回到顶部</strong>:<a href="#1-数据结构与配置">§1</a> · 跳转 <a href="#section-01_systematic">01_systematic.md</a> · <a href="#section-00_knowledge_map">00_knowledge_map.md</a></p>
+</div>
+</main>
+</div>
+</body>
+</html>

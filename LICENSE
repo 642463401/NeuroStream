@@ -1,19 +1,45 @@
-Copyright (c) 2026 NeuroStream. All Rights Reserved.
+NeuroStream Proprietary License
 
-This software and associated documentation files (the "Software") are the
-proprietary property of the author(s). No part of this Software may be
-reproduced, distributed, transmitted, displayed, published, or broadcast
-in any form or by any means without the prior written permission of the
-copyright holder.
+Copyright (c) 2026 黄志鹏 (Huang Zhipeng). All Rights Reserved.
 
-Unauthorized copying, modification, merge, publication, distribution,
-sublicensing, and/or sale of this Software, via any medium, is strictly
-prohibited.
+This source code, documentation, model weights, datasets, and any other
+material contained in this repository (collectively, the "Software") are
+the exclusive property of the copyright holder.
+
+NO LICENSE IS GRANTED BY THIS REPOSITORY BEING PUBLICLY VISIBLE.
+Public visibility on a hosting service (such as GitHub) is for display,
+academic discussion, and showcase purposes only, and does NOT constitute
+a grant of any rights to the viewer.
+
+WITHOUT THE PRIOR WRITTEN PERMISSION OF THE COPYRIGHT HOLDER, no person or
+entity may:
+
+  1. Copy, clone, fork, mirror, or redistribute the Software, in whole or
+     in part, in any form or medium.
+  2. Modify, translate, adapt, or create derivative works based on the
+     Software.
+  3. Use the Software, including any model weights, datasets, or generated
+     artifacts derived from it, for any purpose — including but not limited
+     to personal use, research, commercial use, training other models, or
+     incorporation into other products or services.
+  4. Reverse engineer, decompile, or disassemble any compiled artifact
+     produced from the Software, except to the extent such restriction is
+     prohibited by applicable law.
+  5. Remove, alter, or obscure any copyright, trademark, or other
+     proprietary notice contained in the Software.
+
+Reading the Software for personal study is permitted; any other use
+requires a separate written license agreement with the copyright holder.
+
+To request a license, contact the copyright holder.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT
+OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Any unauthorized use of the Software may result in civil and/or criminal
+liability under applicable copyright, trade secret, and other laws.

@@ -1,6 +1,8 @@
 # NeuroStream V4 Phase 1 — 架构有效性 Ablation 报告
 
-> **核心结论**:同硬件 / 同参数量 / 同数据 / 同 from-scratch,**仅引入 Memory + Cross-Attention + 双进程持续学习**,验证集 perplexity 从 V3 的 **42.1 降到 V4 的 8.5**,**5× 提升,纯架构贡献**。
+> **核心结论**:同硬件 / 同参数量 / 同数据 / 同 from-scratch,**仅引入 Memory + Cross-Attention + 双进程持续学习**,验证集 perplexity 从 V3 的 **35.1 降到 V4 的 8.54**,**4.11× 提升,纯架构贡献**。
+>
+> **2026-05-19 数据对齐**:本报告早期版本引用了 V3 PPL=42.1(来自更早一次 V3 run);当前磁盘上 `output_unsupervised/training_log.json` 实际对应一次更长的 V3 run(76,570 步,最终 val_loss=3.558 / PPL=35.1),本报告所有数字已统一更新至该 run。叠加曲线见 [`docs/figures/v3_v4_overlay.png`](../figures/v3_v4_overlay.png)。
 >
 > 报告日期:2026-05-19
 > 当前快照:`output/phase1_v2/snapshot_best.pt`(97M, 224,928 memories)
@@ -38,12 +40,12 @@
 | **优化器** | AdamW + warmup + cosine | AdamW + warmup + cosine(相同) |
 | **fp16** | ✅ | ✅ |
 | **GPU** | RTX 4060 8GB | RTX 5060 8GB(同档,略弱) |
-| **训练时长** | 23.8h(10 epochs) | 22.99h(early-stop @ step 42,689) |
+| **训练时长** | 31.6h(10 epochs, 76,570 steps) | 22.99h(early-stop @ step 42,689) |
 
 **单一变量分析**:
-- 主干架构升级(LayerNorm→RMSNorm 等)是工程改良,**单独不足以解释 5× ppl 提升**(参考 LLaMA-1 论文,这套组件相比 LayerNorm+GELU 通常带来 5-10% 提升,不是 5×)
-- 训练时长、数据、参数量、优化器、硬件均对齐
-- **5× 提升的主要来源:Memory + Cross-Attention 通路 + 持续学习训练范式**
+- 主干架构升级(LayerNorm→RMSNorm 等)是工程改良,**单独不足以解释 4× ppl 提升**(参考 LLaMA-1 论文,这套组件相比 LayerNorm+GELU 通常带来 5-10% 提升,不是 4×)
+- 数据、参数量、优化器、硬件均对齐;V3 训练**更久**(31.6h vs V4 22.99h)却收敛于更差的 val_loss——**时长不是混杂因素**
+- **4.11× 提升的主要来源:Memory + Cross-Attention 通路 + 持续学习训练范式**
 
 ---
 
@@ -53,15 +55,19 @@
 
 | 指标 | V3 | V4 | 提升倍数 |
 |---|---|---|---|
-| **Val Loss(cross-entropy)** | 3.740 | **2.145** | 1.74× |
-| **Val Perplexity** | **42.1** | **8.5** | **4.95×** |
-| Train Loss | 3.743 | ~2.20(瞬时) | — |
-| Train-Val gap | 0.003(良好泛化) | 接近 0(健康) | — |
+| **Val Loss(cross-entropy)** | 3.558 | **2.145** | 1.66× |
+| **Val Perplexity** | **35.10** | **8.54** | **4.11×** |
+| Train Loss(final) | 3.467 | ~2.20(瞬时) | — |
+| Train-Val gap | 0.091(轻度欠拟) | 接近 0(健康) | — |
 
 ### 3.2 训练曲线
 
-V3 完整轨迹:`output_unsupervised/training_curves.png`
-V4 完整轨迹:`output/phase1_v2/val_loss_curve.png`(由 train.py 早停改造自动生成)
+**叠加对比图**:[`docs/figures/v3_v4_overlay.png`](../figures/v3_v4_overlay.png)——同一张图上画 V3 + V4
+val_loss 曲线,可直观看到两条曲线**自始至终不重叠**(V4 训练**前期** PPL 已低于 V3 训练**末期**),
+说明 PPL 4× 差异不来自训练时长。
+
+- V3 完整轨迹:`output_unsupervised/training_curves.png`
+- V4 完整轨迹:`output/phase1_v2/val_loss_curve.png`(由 train.py 早停改造自动生成)
 
 V4 早停触发条件:`target_step=7,656` 达成 + 连续 5 次 val_loss 无显著改善;最终 step=42,689,best @ step 40,176。
 
@@ -102,7 +108,7 @@ A: 可以手术,但是不需要做,但是要看你的病情。
 - **factual_accuracy +10.1%** —— 事实准确度提升 0.5 分,得益于记忆通路提供的"相似病例对照"
 - **completeness -9.4%** —— V4 回答**更精炼**但信息覆盖略减,这是 trade-off(从生成示例看,V4 倾向给"建议+方向"而非长篇解释)
 - **fluency 持平** —— 两个版本语言流畅度都已较高(7.5/10),不是瓶颈
-- **Overall +5.8%** 远不如 PPL 5× 提升的幅度 —— 因为 LLM judge 是 1-10 整数粒度粗,且 V3 已经有及格水平,**真正的提升集中在 logic_safety + factual_accuracy 这两个最重要的医学维度**
+- **Overall +5.8%** 远不如 PPL 4.11× 提升的幅度 —— 因为 LLM judge 是 1-10 整数粒度粗,且 V3 已经有及格水平,**真正的提升集中在 logic_safety + factual_accuracy 这两个最重要的医学维度**
 
 #### 3.4.2 NLP 指标对照(30 样本均值)
 
@@ -119,10 +125,10 @@ A: 可以手术,但是不需要做,但是要看你的病情。
 
 > **⚠️ ROUGE 指标坦诚声明**:V3 的 ROUGE 实现疑似使用了 word-level tokenization(`rouge1_f` 数值恰好等于 `token_f1`),而 V4 的 `eval_v4.py` 使用了字符级中文 + 词级英文混合 tokenization,**两者 ROUGE 不可直接对比**。token_f1 / jaccard / char_f1 / bleu 在两版间是一致实现,可对比 —— **这 4 项 V4 全面超越 V3**,提升幅度 20.7% ~ 68.8%。
 
-#### 3.4.3 与 PPL 5× 提升的语义解读
+#### 3.4.3 与 PPL 4.11× 提升的语义解读
 
 V4 vs V3 同时呈现两组数据:
-- **PPL: 42.1 → 8.5(5× 提升)** —— 语言建模能力的硬指标
+- **PPL: 35.1 → 8.54(4.11× 提升)** —— 语言建模能力的硬指标
 - **LLM Overall: 0.4527 → 0.4790(+5.8%)** —— 应用质量的小幅提升
 - **logic_safety: +22.2% / factual_accuracy: +10.1%** —— 单维度的关键提升
 
@@ -163,24 +169,24 @@ python eval_v4.py --resume output/phase1_v2/snapshot_best.pt --api-key $env:DASH
 | 模型 | 参数 | 数据规模 | 预训练 | Val PPL | 备注 |
 |---|---|---|---|---|---|
 | **NeuroStream V4** | **97M** | **250K 对话** | ❌ from-scratch | **8.5** | Memory + Cross-Attn |
-| NeuroStream V3 | 97M | 250K 对话 | ❌ from-scratch | 42.1 | 纯 GPT-style |
+| NeuroStream V3 | 97M | 250K 对话 | ❌ from-scratch | 35.10 | 纯 GPT-style |
 | GPT-2 Small | 117M | ~10B tokens(通用) | ✅ 大规模 | ~30(通用) | 不同任务 |
 | OPT-125M | 125M | 180B tokens(通用) | ✅ 大规模 | ~27(通用) | 不同任务 |
 | BioGPT | 347M | PubMed 全量(数十亿 tokens) | ✅ 大规模 | ~25(生物医学) | 仅英文,3.5x 参数 |
 
 **关键洞察**:
-- V4 在**数据规模少 4 个数量级、参数少 3.5x、零预训练**的条件下,perplexity 与 BioGPT 接近(8.5 vs 25;低于即更好,在 100K 词表的医学领域内 8.5 是显著优势)
-- 与 V3 的对照**消除了数据 / 预训练 / 规模的混杂变量**,5× 提升纯属架构贡献
+- V4 在**数据规模少 4 个数量级、参数少 3.5x、零预训练**的条件下,perplexity 与 BioGPT 接近(8.54 vs 25;低于即更好,在 100K 词表的医学领域内 8.54 是显著优势)
+- 与 V3 的对照**消除了数据 / 预训练 / 规模的混杂变量**,4.11× 提升纯属架构贡献
 
 ---
 
 ## 5. 架构贡献分解
 
-5× perplexity 提升来自哪些组件?基于设计意图的定性分解(精确消融实验留待后续):
+4.11× perplexity 提升来自哪些组件?基于设计意图的定性分解(精确消融实验留待后续):
 
 | 组件 | 估计贡献 | 机制 |
 |---|---|---|
-| **Memory + Cross-Attention** | **主要(~3-4×)** | 模型生成 token 时可"读取"训练分布中类似 query 的对照例,降低预测不确定性 |
+| **Memory + Cross-Attention** | **主要(~3×)** | 模型生成 token 时可"读取"训练分布中类似 query 的对照例,降低预测不确定性 |
 | **Reward-weighted 训练** | ~1.2× | 高质量样本在 loss 中权重更大,加速收敛到合理回答风格 |
 | **持续学习训练范式(无 epoch 边界)** | ~1.1× | 数据流式 push 进 ConversationBuffer,reward-weighted 采样使模型反复见高 reward 样本 |
 | **RMSNorm + SwiGLU + RoPE** | ~1.1× | 现代 Transformer 组件改良(LLaMA 标配,**非本项目创新**) |
@@ -279,7 +285,7 @@ python diagnose_shortcut_v2.py --resume output/phase1_v2/snapshot_best.pt
   year   = {2026},
   month  = {5},
   url    = {(internal report)},
-  note   = {Phase 1 ablation: V3 PPL 42.1 → V4 PPL 8.5 on 250K medical dialogues, from-scratch}
+  note   = {Phase 1 ablation: V3 PPL 35.1 → V4 PPL 8.54 on 250K medical dialogues, from-scratch (4.11x improvement)}
 }
 ```
 

@@ -152,5 +152,5 @@ Memory-Conditioned cross-attention 全部进入训练路径。早期 V3 GPT-styl
 
 ### 训练实验
 
-- **V3 医学对话训练** — 97M 参数，250K 对话 (80% 中文)，10 epochs，23.8h on RTX 4060
-- val_loss = 3.740, perplexity = 42.1, train-val gap < 0.004（良好泛化）
+- **V3 医学对话训练** — 97M 参数，250K 对话 (80% 中文)，10 epochs，31.55h on RTX 4060
+- val_loss = 3.558, perplexity = 35.10, train-val gap 0.091（无过拟,轻度欠拟）

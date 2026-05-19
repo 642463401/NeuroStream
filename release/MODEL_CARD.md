@@ -50,7 +50,7 @@ NeuroStream V4 Phase 1 训练得到的 best snapshot 的**脱敏版本**。
 | 数据 | 250K 医学对话 | 250K 医学对话 | 同 |
 | 预训练 | ❌ from-scratch | ❌ from-scratch | 同 |
 | 训练框架 | 标准监督 LM | NeuroStream 双进程 + memory + cross-attn | **唯一变量** |
-| Val PPL | 42.1 | **8.5** | **5× 提升,纯架构贡献** |
+| Val PPL | 35.10 | **8.54** | **4.11× 提升,纯架构贡献** |
 
 详见 [docs/experiments/v4_phase1_ablation.md](../docs/experiments/v4_phase1_ablation.md)。
 
